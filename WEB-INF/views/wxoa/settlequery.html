@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?19"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="<@spring.ctx/>/wxoa/index.action"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["settlequery.head"]!"结算管理"}</h6>
+			</div>
+			<!-- Filter Option-->
+			<div class="filter-option" id="sideNavbarToggler"><i class="icofont-search"></i></div>
+		</div>
+	</div>
+	
+	<!-- Sidenav Black Overlay-->
+	<div class="sidenav-black-overlay"></div>
+	<!-- Side Nav Wrapper-->
+	<div class="suha-sidenav-wrapper filter-nav" id="sidenavWrapper">
+		<!-- Catagory Sidebar Area-->
+		<div class="catagory-sidebar-area">
+			<!-- Catagory-->
+			<div class="widget catagory mb-3">
+				<h6 class="widget-title mb-0">${LSA["settlequery.stono"]!"入库单号"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="istono"/>
+					</div>
+				</div>
+			</div>
+			<!-- Apply Filter-->
+			<div class="apply-filter-btn"><a class="btn btn-success" href="javascript:void(0)" id="btn-search">${LSA["settlequery.searchbtn"]!"搜索"}</a></div>
+		</div>
+	</div>
+    
+    <div class="page-content-wrapper">
+    	<div class="container-fluid">
+			<div class="row" id="datrows-container">
+				<div class="col-12" style="display: none;">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="media-left media-middle media-bottom">
+								<img src="<@spring.ctx/>/ress/images/core-img/lightbulb_gray.png" width="48" alt="">
+							</div>
+							<div class="media-body">
+								<div class="sub-item">
+									<em class="sub-title">{stono}（{ar_statusdesc}）</em><div class="data-content text-right">&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["settlequery.isdate"]!"入库日期"}：</em><div class="data-content text-right">{datedesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["settlequery.isstono"]!"入仓号"}：</em><div class="data-content text-right">{istono}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["settlequery.amtdesc"]!"应结算金额"}：</em><div class="data-content text-right">{amtdesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["settlequery.amtstldesc"]!"已结算金额"}：</em><div class="data-content text-right">{amtstldesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em></em><div class="data-content text-right"><a class="btn btn-success btn-sm" href="<@spring.ctx/>/wxoa/istkview.do"><i class="mr-1 icofont-page"></i>${LSA["settlequery.dtlsub"]!"详情"}</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="icon-loading">Loading......</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12 text-center"><button type="button" class="btn btn-info" id="btn-loadmore">${LSA["settlequery.loadbtn"]!"加载更多"}...</button></div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript">
+	$(function(){
+		var curPage = 1,
+		    curLimit = 20;
+		var doRefresh = function(isClear) {
+			var data = {
+					"stono": $("#istono").val(),
+					"page": curPage,
+					"limit": curLimit
+				};
+			HyUtils.post("/wxoa/settledat.do", data, function (datobj) {
+				if (isClear === true) clearList();
+				var gd = datobj;
+				if (gd && gd.rows && gd.rows.length > 0) {
+					var tpl = $('script[type="text/template"]').html();
+					var arr = [];
+					$.each(gd.rows, function(i, o) {
+						if (HyUtils.isEmpty(o.ar_statusdesc)) 
+							o.ar_statusdesc = '无费用';
+						else 
+							o.ar_statusdesc = (o.ar_status == 'C') ? '已结算' : ((o.ar_status == 'P') ? '部分结算' : '未结算');
+						o.imgname = (o.ar_status == 'C' || HyUtils.isEmpty(o.ar_status)) ? 'lightbulb_gray.png' : 'lightbulb_yellow.png';
+						o.datedesc = HyUtils.isEmpty (o.actdatedesc) ? o.stodatedesc : o.actdatedesc;
+						o.istono = (HyUtils.isEmpty(o.salescode) ? '' : o.salescode) + '-'
+									+ (HyUtils.isEmpty(o.podcode) ? '' : o.podcode) + '-'
+									+ (HyUtils.isEmpty(o.jobcliextcode) ? '' : o.jobcliextcode)
+									+ (HyUtils.isEmpty(o.refno) ? '' : '-' + o.refno);
+						arr.push(HyUtils.formatTemplate(o, tpl));
+					});
+					$('#datrows-container').append(arr.join(''));
+				} else {
+					toastr.info('没有更多数据了^_^');
+				}
+			});
+		};
+		var clearList = function(){
+			$('#datrows-container').empty();
+		};
+		var addLoading = function(){
+			var ht = '<div class="col-12"><div class="card mediaview-card mb-3"><div class="card-body d-flex align-items-center"><div class="icon-loading">Loading......</div></div></div></div>';
+			$('#datrows-container').empty();
+			$('#datrows-container').append(ht);
+		};
+		
+		doRefresh(true);
+		
+		$('#btn-search').click(function(event){
+			curPage = 1;
+			addLoading();
+			doRefresh(true);
+		});
+		$('#btn-loadmore').click(function(){
+			curPage ++;
+			doRefresh();
+		});
+	});
+	</script>
+	
+	<script type="text/template">
+				<div class="col-12">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="media-left media-middle media-bottom">
+								<img src="<@spring.ctx/>/ress/images/core-img/lightbulb_gray.png" width="48" alt="">
+							</div>
+							<div class="media-body">
+								<div class="sub-item">
+									<em class="sub-title">{stono}（{ar_statusdesc}）</em><div class="data-content text-right">&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["settlequery.isdate"]!"入库日期"}：</em><div class="data-content text-right">{datedesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["settlequery.isstono"]!"入仓号"}：</em><div class="data-content text-right">{istono}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["settlequery.amtdesc"]!"应结算金额"}：</em><div class="data-content text-right">{amtdesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["settlequery.amtstldesc"]!"已结算金额"}：</em><div class="data-content text-right">{amtstldesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em></em><div class="data-content text-right"><a class="btn btn-success btn-sm" href="javascript:void(0);"><i class="mr-1 icofont-page"></i>${LSA["settlequery.dtlsub"]!"详情"}</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	</script>
+</body>
+</html>

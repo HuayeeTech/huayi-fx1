@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?19"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button" style="visibility: hidden;"><a href="#"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["bindret.head"]!"绑定微信结果"}</h6>
+			</div>
+			<!-- Filter Option-->
+			<div class="filter-option" id="sideNavbarToggler" style="visibility: hidden;"><i class="icofont-search"></i></div>
+		</div>
+	</div>
+    
+    <div class="page-content-wrapper">
+    	<div class="selection-panel bg-white mb-3 py-3">
+    		<div class="container d-flex align-items-center justify-content-between">
+				<#if CURRENT_USER??>
+				<p>${LSA["bindret.tips"]!"您已绑定微信，绑定用户为"}：<b>${CURRENT_USER.username}</b>。</p>
+				<p>${LSA["bindret.unbintip"]!"点击这里"}<a href="javascript:void(0)" onclick="doUnbind()"><b style="color: #C0392B;">${LSA["bindret.unbincli"]!"解除绑定"}</b></a>。</p>
+				<#else>
+				<p>${LSA["bindret.bintip"]!"您未绑定微信，点击这里"}<a href="<@spring.ctx/>/wxmsg/wxbind.action"><b style="color: #45B39D;">${LSA["bindret.bincli"]!"绑定"}</b></a>。</p>
+				</#if>
+    		</div>
+    	</div>
+	</div>
+	
+		
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript">
+	function doUnbind() {
+		var url = "/wxmsg/unbind.action";
+		xtip.confirm('确认解绑吗？', function(){
+			HyUtils.post(url, {}, function() {
+				window.location.reload();
+			});
+		});
+	}
+	</script>
+</body>
+</html>

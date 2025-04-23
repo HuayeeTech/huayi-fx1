@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+	<title>仓储货物追踪 - <#if pgseo??>${pgseo.title!'华逸风行'}<#else>华逸风行</#if></title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<meta name="description" content=""/>
+	<meta name="keywords" content=""/>
+	<meta name="author" content=""/>
+	<meta name="copyright" content=""/>
+	<meta name="robots" content="all"/>
+	<meta name="visit-after" content="7 days"/>
+	<link href="${rc.contextPath}/ress/images/favicon.ico?v=202103.1" rel="shortcut icon" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/extjs/ress/css/ext-all.css?v=202102.1"/>
+	<link rel="stylesheet" href="<@spring.ctx/>/ress/css/default/style.css?v=202104.2"/>
+	<style type="text/css">
+	    body{
+	      height:auto;
+	    }
+	    .detail-content{
+	       height:100%;
+	    }
+		.detail-list{
+           display: flex;
+           flex-direction: column;
+           padding:5px;
+           margin:10px;
+        }
+        .detail-box{
+           display: flex;
+           height: 65px;
+           justify-content: start;
+        }
+        .step-left{
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+        }
+        .step-status{
+           margin-left: 10px;
+           display:flex;
+           flex-direction:column;
+           align-item:center;
+        }
+        .circle{
+           width: 20px;
+           height: 20px;
+           border-radius: 50%;
+           background-color: #1296db;
+           color:#fff;
+           text-align:center;
+           line-height:20px;
+        }
+        .step-line{
+           height: 100%;
+           width: 3px;
+           background-color: #1296db;
+           flex: 2;
+        }
+        .label-err{
+	       font-size: 14px;
+	       color: red;
+	       font-weight: normal;
+        }
+        .space{
+           height:40px;
+        }
+	</style>
+	<#include "/xtpl/extlibs.ftl">
+	<script type="text/javascript" charset="utf-8">
+	
+	</script>
+</head>
+<body>
+	<#if mpk.success>
+	    <div class="detail-content">
+	         <div class="detail-list">
+	            <#assign items = mpk.obj.rows>
+	              <#list items as item>
+	                      <div class="detail-box">
+                               <div class="step-left">
+                                    <div class="circle" <#if item.isest = "E">style="background-color: #ccc;"</#if> >&radic;</div>
+                                    <div class="step-line" <#if item_index + 1 = items?size>style="display: none;"</#if> ></div>
+                               </div>
+                               <div class="step-status">
+                                    <div class=""><#if item.isest = "E">(预)</#if> ${item.status!''}</div>
+                                    <div><#if item.statusdesc??>(${item.statusdesc!''})</#if></div>
+                                    <#if item.isest = "E">
+                                       <div class="">${(item.estdate?string("yyyy-MM-dd"))!''} </div>
+                                    <#else>
+                                       <div class="">${(item.actdate?string("yyyy-MM-dd"))!''}</div>
+                                    </#if>
+                               </div>
+                          </div>
+	              </#list>
+	         </div>
+	         <div class="space"></div>  
+	    </div>
+	<#else>
+	   <div class="detail-content">
+	        <h3 class="label-err">暂无动态:${mpk.msg!''}</h3>
+	   </div>
+	</#if>
+</body>
+</html>

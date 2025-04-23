@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?v=202201.1"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+		#srhbtn {
+			border: 1px solid #73C6B6;
+			padding: 2px 8px;
+		}
+		.sub-title {
+			font-size: 0.75rem;
+			font-weight: 400;
+			padding-left: 4px;
+		}
+		.fedtbox {
+			padding-bottom: 20px;
+		}
+		.fedtbox .row {
+			padding: 2px 6px;
+		}
+		.fedtbox .form-control {
+			padding: 2px;
+			height: 22px;
+			line-height: 22px;
+			font-size: 11px;
+		}
+		.xtiper_sheet_tit {
+			padding-top: 6px;
+			padding-bottom: 6px;
+		}
+		#srhcard .row {
+			padding-bottom: 3px;
+		}
+		.btn-txt {
+			border: 1px solid #A6ACAF;
+			padding: 1px 5px;
+			background: #E5E7E9;
+		}
+		#mcnts-list div.row {
+			font-size: 10px;
+			padding-top: 2px;
+			padding-bottom: 2px;
+		}
+		#mcnts-list div.row:nth-child(odd) {
+			background-color: #F5F5F5;
+		}
+		#mcnts-list div.row:nth-child(even) {
+			background-color: #FDF2E9;
+		}
+		#searchbox div.row {
+			padding-top: 6px;
+			padding-bottom: 8px;
+		}
+		#searchbox .icofont-search {
+			font-size: 16px;
+			font-weight: 700;
+		}
+		#srh_jobno {
+			width: 86%;
+			margin-right: 3px;
+		}
+		#dtl-container {
+			padding: 0.75rem;
+		}
+		#dtl-container .user-data-card {
+			background: #E1F5FE;
+			border-color: #64B5F6;
+		}
+		.cntno-edt {
+			color: #FF0000;
+		}
+		#dtl-container .icofont-edit {
+			color: #3498DB;
+		}
+		.sta-acpted {
+			background-color: #28B463;
+			color: #FEF9E7;
+		}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="javascript:history.go(-1)"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["cntdrvup.head"]!"司机上传箱号"}</h6>
+			</div>
+			<!-- Navbar Toggler-->
+			<div class="filter-option" id="sideNavbarToggler"><i class="icofont-listing-box"></i></div>
+		</div>
+	</div>
+	
+	<#include "/wxoa/widget/sidenav-cntdrvup.ftl">
+    <div class="page-content-wrapper">
+    	<div class="container" id="searchbox">
+    		<div class="row">
+    			<div class="col-4">${LSA["cntdrvup.jobno"]!"工作号"}</div>
+    			<div class="col-8"><input type="text" id="srh_jobno" value=""/><span id="btnSearch"><i class="icofont-search"></i></span></div>
+    		</div>
+    	</div>
+    	<div class="selection-panel bg-white mb-3 py-3">
+    		<div class="container" id="mst-container">
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvup.jobno"]!"工作号"}</div>
+    				<div class="col-8 text-right"></div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvup.vove"]!"船名航次"}</div>
+    				<div class="col-8 text-right"></div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">ETD</div>
+    				<div class="col-8 text-right"></div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvup.cmdate"]!"截关日"}</div>
+    				<div class="col-8 text-right"></div>
+    			</div>
+    		</div>
+    		<div class="container" id="dtl-container">
+    			<div class="card user-data-card">
+    				<div class="card-body">
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.cntcode"]!"箱型"}</div>
+		    				<div class="col-8 text-right"></div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.cntno"]!"箱号"}</div>
+		    				<div class="col-8 text-right"></div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.sealno"]!"封号"}</div>
+		    				<div class="col-8 text-right"></div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.cntnobl"]!"上传箱号"}</div>
+		    				<div class="col-8 text-right"></div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.submittime"]!"上传时间"}</div>
+		    				<div class="col-8 text-right"></div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.acptedtime"]!"受理时间"}</div>
+		    				<div class="col-8 text-right"></div>
+		    			</div>
+		 			</div>
+	 			</div>
+    		</div>
+    	</div>
+    	
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-8"><h6 class="sub-title">${LSA["cntdrvup.attcview"]!"附件一览"}</h6></div>
+    			<div class="col-4 text-right">
+    				<a href="javascript:void(0)" id="attrefresh" class="btn-txt">${LSA["cntdrvup.refresh"]!"刷新"}</a>
+    			</div>
+    		</div>
+    		<div class="selection-panel bg-white mb-3 py-3" id="img-view">
+    			
+    		</div>
+    	</div>
+    	
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-8"><h6 class="sub-title">${LSA["cntdrvup.attupload"]!"附件上传"}</h6></div>
+    			<div class="col-4 text-right">
+    				<a href="javascript:void(0)" id="attbtnadd" class="btn-txt">${LSA["cntdrvup.attbtnadd"]!"上传"}</a>
+    			</div>
+    		</div>
+    		<div class="selection-panel bg-white mb-3 py-3" id="img-list">
+    			
+    		</div>
+    	</div>
+	</div>
+	
+	<div id="fedtwin">
+	<!-- 
+		<div class="fedtbox" class="container">
+			<div class="row">
+   				<div class="col-4">箱号</div> 
+   				<div class="col-8 text-right">
+   					<input id="edt_cntpkid" type="hidden"/>
+   					<input id="edt_cntno" type="text" class="form-control" readonly="readonly"/>
+   				</div>
+   			</div>
+			<div class="row">
+   				<div class="col-4">封号</div> 
+   				<div class="col-8 text-right">
+   					<input id="edt_sealno" type="text" class="form-control" readonly="readonly"/>
+   				</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-4">上传箱号</div>
+   				<div class="col-8 text-right">
+   					<input id="edt_cntnobl" type="text" class="form-control" style="text-transform: uppercase;"/>
+   				</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-4">上传封号</div>
+   				<div class="col-8 text-right">
+   					<input id="edt_sealnobl" type="text" class="form-control" style="text-transform: uppercase;"/>
+   				</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-4">车牌号</div>
+   				<div class="col-8 text-right">
+   					<input id="edt_vehnobl" type="text" class="form-control" style="text-transform: uppercase;"/>
+   				</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-4">司机电话</div>
+   				<div class="col-8 text-right">
+   					<input id="edt_drvtelbl" type="text" class="form-control" style="text-transform: uppercase;"/>
+   				</div>
+   			</div>
+   			<div class="row" style="padding-left: 20px; padding-right: 20px;">
+   				<button type="button" class="btn btn-primary btn-sm btn-block" id="dtlbtnok" onclick="doSubmit()">提交</button>
+   			</div>
+		</div>
+	 -->
+	</div>
+	
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	<script type="text/javascript">var curuid = "<#if CURRENT_USER??>${CURRENT_USER.userid}<#else>0</#if>";</script>
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript" src="<@spring.ctx/>/ress/views/wxoa/cntdrvup.js?v=202203.1"></script>
+	
+	<script type="text/template" id="mst">
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvup.jobno"]!"工作号"}<input type="hidden" id="jobid" value="{jobid}"/><input type="hidden" id="docdatpkid" value="{docdatpkid}"/></div>
+    				<div class="col-8 text-right">{jobno}</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvup.vove"]!"船名航次"}</div>
+    				<div class="col-8 text-right">{vessel}&nbsp;/&nbsp;{voyage}</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">ETD</div>
+    				<div class="col-8 text-right">{etd}</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvup.cmdate"]!"截关日"}</div>
+    				<div class="col-8 text-right">{cmdate}</div>
+    			</div>
+	</script>
+	
+	<script type="text/template" id="dtl">
+    			<div class="card user-data-card">
+    				<div class="card-body">
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.cntcode"]!"箱型"}</div>
+		    				<div class="col-8 text-right">{cntcode}</div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.cntno"]!"箱号"}</div>
+		    				<div class="col-8 text-right">{cntno}</div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.sealno"]!"封号"}</div>
+		    				<div class="col-8 text-right">{sealno}</div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.cntnobl"]!"上传箱号"}</div>
+		    				<div class="col-8 text-right cntno-edt" data-id="{cntpkid}"><i class="icofont-edit"></i>&nbsp;{cntno_bl}</div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.sealnobl"]!"上传封号"}</div>
+		    				<div class="col-8 text-right">{sealno_bl}</div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.submittime"]!"上传时间"}</div>
+		    				<div class="col-8 text-right">{drvsubmittime}</div>
+		    			</div>
+    					<div class="row">
+		    				<div class="col-4">${LSA["cntdrvup.acptedtime"]!"受理时间"}</div>
+		    				<div class="col-8 text-right">{drvacptedtime}</div>
+		    			</div>
+		 			</div>
+	 			</div>
+	</script>
+	<script type="text/template" id="docx">
+	<div class="image-item" id="img-{docid}"><div class="image-close" onclick="deleteImg('{docid}')">X</div><div onclick="xtip.photoApp('docx1', {rowindex})"><img alt="" src="{thumdata}" data-xphoto="docx1" data-xsrc="<@spring.ctx/>/edocs/download.do?docid={docid}"/></div></div>
+	</script>
+	<script type="text/template" id="mcnts">
+	    			<div class="row mb-1" onclick="$('#goHomeBtn').click(); doRefresh('{jobid}');">
+	    				<div class="col-5">{jobno}</div>
+	    				<div class="col-5">{cntno}</div>
+	    				<div class="col-2 {stacsl}">{subtmshort}</div>
+	    			</div>
+	</script>
+</body>
+</html>

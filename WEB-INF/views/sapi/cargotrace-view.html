@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+	<title>货物追踪详情 - <#if pgseo??>${pgseo.title!'华逸风行'}<#else>华逸风行</#if></title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<meta name="description" content=""/>
+	<meta name="keywords" content=""/>
+	<meta name="author" content=""/>
+	<meta name="copyright" content=""/>
+	<meta name="robots" content="all"/>
+	<meta name="visit-after" content="7 days"/>
+	<link href="${rc.contextPath}/ress/images/favicon.ico?v=202103.1" rel="shortcut icon" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/sapi/cargotrace-view.css?v=202304.6"/>
+	
+	<script type="text/javascript" charset="utf-8">
+	   var _defLsid = '<@spring.message "lsid"/>';
+	   
+	</script>
+</head>
+<body>
+	<div class="header"></div>
+	<#if mpk.success>
+	<div class="section">
+	<div class="container">
+		<div class="box-tip"><span><@spring.message "ls9455"/>(<@spring.message "ls9451"/>)</span></div>
+		<#assign datrows = mpk.obj.rows>
+		<#list datrows as datrow>
+			<#if datrow.ackresults gt 0>
+				<#list datrow.ackDataGrid.rows as mst>
+				<div class="card">
+					<div class="card-header">
+						<div class="title"><span class="box-tag"><@spring.message "ls9452"/><#if datrow.ackresults gt 1>(${datrow_index + 1})</#if></span>&nbsp;&nbsp;<@spring.message "ls2613"/>：<b>${mst.blno!''}</b></div>
+						<div class="row">
+							<label><@spring.message "ls1956"/>:</label>
+							<span class="text"><#if mst.isCompleted = "Y"><@spring.message "ls9197"/><#else><@spring.message "ls9198"/></#if></span>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<label><@spring.message "ls2613"/>:</label>
+							<span class="text">${mst.blno!''}</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls1423"/>:</label>
+							<span class="text">${mst.sono!''}</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls2891"/>:</label>
+							<span class="text" v-if="mst.carrier">${mst.carrier!''}(${mst.carrierCode!''})</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls2649"/>:</label>
+							<span class="text">${mst.vessel!''}</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls2650"/>:</label>
+							<span class="text">${mst.voyage!''}</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls2832"/>:</label>
+							<span class="text" v-if="mst.reception">${mst.reception!''} (${mst.receptionCode!''})</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls2409"/>:</label>
+							<span class="text" v-if="mst.pol" >${mst.pol!''} (${mst.polCode!''})</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls2394"/>:</label>
+							<span class="text" v-if="mst.destination" >${mst.destination!''} (${mst.destinationCode!''})</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls1629"/>:</label>
+							<span class="text" v-if="mst.dtp" >${mst.pld!''} (${mst.pldCode!''})</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls9453"/>:</label>
+							<span class="text">${mst.pot!''}</span>
+						</div>
+						<div class="row">
+							<label>ETD:</label>
+							<span class="text">${mst.etdPolFormat!''}</span>
+						</div>
+						<div class="row">
+							<label>ETA:</label>
+							<span class="text">${mst.etaPldFormat!''}</span>
+						</div>
+						<div class="row">
+							<label>ATD:</label>
+							<span class="text">${mst.atdPolFormat!''}</span>
+						</div>
+						<div class="row">
+							<label>ATA:</label>
+							<span class="text">${mst.ataPldFormat!''}</span>
+						</div>
+						<div class="row">
+							<label>&nbsp;</label>
+							<span class="text">&nbsp;</span>
+						</div>
+					</div>
+				</div>
+				<!--集装箱信息 -->
+				<#list mst.containerInfoList as cntr>
+				<div class="card">
+					<div class="card-header">
+						<div class="title"><span class="box-tag"><@spring.message "ls6339"/>(${cntr_index + 1})</span>&nbsp;&nbsp;&nbsp;&nbsp;<@spring.message "ls1759"/>：<b>${cntr.cntno!''}</b>&nbsp;&nbsp;<@spring.message "ls1108"/>：${cntr.size!''}</div>
+					</div>
+					<div class="card-body">
+						<!-- 集装箱动态步骤条 -->
+						<#if cntr.statusInfoList??>
+						<div style="white-space: nowrap; height: 280px;  margin-top: 45px; overflow: scroll;" >
+							<div class="cntr-step">
+								<#list cntr.statusInfoList?sort_by("statusTime")?reverse as cntrStatus>
+								<div class="step-cont"> 
+									<div class="step-items">
+										<div class="status" id="statustext">${cntrStatus.statusDescZh !''}</div>
+									</div>
+									<div class="step-line">
+										<div class="step_row_line" <#if cntrStatus_index = 0>style="background: #fff;"</#if>></div>
+										<#if cntrStatus.isEst = "Y">
+										<span class="step_row_icon_gray"><label style="visibility: hidden;">&radic;</label></span>
+										<#else>
+										<span class="step_row_icon">&radic;</span>
+										</#if>
+										<div class="step_row_line" <#if cntrStatus_index + 1 = cntr.statusInfoList?size>style="background: #fff;"</#if>></div>
+									</div>
+									<div class="step-items">
+										<div class="status-info">
+											<div class="status-time"><#if cntrStatus.isEst = "Y">(预)</#if>${cntrStatus.statusTimeFormat!''}</div>
+											<div class="status-place" onmousemove="showTip('pd-${cntr_index}-${cntrStatus_index}')" onmouseout="closeTip('pd-${cntr_index}-${cntrStatus_index}')">
+											    ${cntrStatus.statusPlace!''}
+											</div>
+											<div>${cntrStatus.statusDesc!''}</div>
+										</div>
+									</div>
+									<div class="place-detail" id="pd-${cntr_index}-${cntrStatus_index}" style="display: none;">
+										<div><p>${cntrStatus.statusPlace!''}</p></div>
+										<div class="trangle"></div>
+									</div>
+								</div>
+								</#list><#-- end Of cntr.statusInfoList -->
+							</div>
+						</div>
+						<#else>
+						<div><p style="text-align: center; color: gray;"><@spring.message "ls9457"/></p></div>
+						</#if>
+					</div>
+				</div>
+				</#list><#-- end Of mst.containerInfoList -->
+				<!--航段信息 -->
+				<#list mst.routingInfoList as routItem>
+				<div class="card">
+					<div class="card-header">
+						<div class="title"><span class="box-tag"><@spring.message "ls9454"/>(${routItem_index + 1})</span></div>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<label><@spring.message "ls1759"/>:</label>
+							<span class="text">${routItem.cntno!''}</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls2649"/>:</label>
+							<span class="text">${routItem.vessel!''}</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls2650"/>:</label>
+							<span class="text">${routItem.voyage!''}</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls2409"/>:</label>
+							<span class="text" v-if="routItem.loading" >${routItem.loading!''} (${routItem.loadingCode!''})</span>
+						</div>
+						<div class="row">
+							<label><@spring.message "ls1629"/>:</label>
+							<span class="text" v-if="routItem.discharging">${routItem.discharging!''} (${routItem.dischargingCode!''})</span>
+						</div>
+						<div class="row">
+							<label>ETD:</label>
+							<span class="text">${routItem.etd!''}</span>
+						</div>
+						<div class="row">
+							<label>ETA:</label>
+							<span class="text">${routItem.eta!''}</span>
+						</div>
+						<div class="row">
+							<label>ATD:</label>
+							<span class="text">${routItem.atd!''}</span>
+						</div>
+						<div class="row">
+							<label>ATA:</label>
+							<span class="text">${routItem.ata!''}</span>
+						</div>
+					</div>
+				</div>
+				</#list><#-- end Of mst.routingInfoList -->
+				</#list><#-- end Of datrow.ackDataGrid.rows -->
+			<#else>
+				<h3 class="label-err"><@spring.message "ls9461"/>：${datrow.ackmsg!''}</h3>
+			</#if>
+		</#list>
+	</div>
+	<#else>
+	<div class="container">
+		<div class="box-tip"><span class="label-err">${mpk.msg}</span></div>
+	</div>
+	</#if>
+	</div>
+	<div style="height: 60px">&nbsp;</div>
+	<script type="text/javascript" charset="utf-8">
+	function showTip(id) {
+		//alert(id);
+		document.getElementById(id).style.display = '';
+	}
+	function closeTip(id) {
+		//alert(id);
+		document.getElementById(id).style.display = 'none';
+	}
+	</script>
+</body>
+</html>

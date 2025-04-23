@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?v=202103.2"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+		#srhbtn {
+			border: 1px solid #73C6B6;
+			padding: 2px 8px;
+		}
+		.sub-title {
+			font-size: 0.75rem;
+			font-weight: 400;
+			padding-left: 4px;
+		}
+		.fedtbox {
+			padding-bottom: 20px;
+		}
+		.fedtbox .row {
+			padding: 6px 6px;
+		}
+		.fedtbox .form-control {
+			padding: 4px;
+			height: 28px;
+			line-height: 24px;
+		}
+		#srhcard .row {
+			padding-bottom: 3px;
+		}
+		.btn-txt {
+			border: 1px solid #A6ACAF;
+			padding: 1px 5px;
+			background: #E5E7E9;
+		}
+		#mcnts-list div.row {
+			font-size: 10px;
+		}
+		#mcnts-list div.row:nth-child(odd) {
+			background-color: #F5F5F5;
+		}
+		#mcnts-list div.row:nth-child(even) {
+			background-color: #FDF2E9;
+		}
+		.title-row {
+			height: 24px;
+			line-height: 28px;
+			color: #3498DB;
+			font-weight: 700;
+		}
+		#mst-container div.row {
+			margin-bottom: 6px;
+		} 
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="javascript:history.go(-1)"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["setting.head"]!"设置"}</h6>
+			</div>
+			<!-- Navbar Toggler-->
+			<div class="filter-option" id="sideNavbarToggler"><i class="icofont-navigation-menu"></i></div>
+		</div>
+	</div>
+	
+	<#include "/wxoa/widget/sidenav-main.ftl">
+    <div class="page-content-wrapper">
+    	<div class="container">
+    		<div class="row title-row">
+    			<div class="col-8"><h6 class="sub-title">${LSA["setting.pwdsub"]!"修改密码"}</h6></div>
+    		</div>
+    	</div>
+    	<div class="selection-panel bg-white mb-3 py-3">
+    		<div class="container" id="mst-container">
+    			<div class="row">
+    				<div class="col-4">${LSA["setting.pwd"]!"原密码"}：</div>
+    				<div class="col-8 text-right"><input type="password" id="pwd" class="form-control input-sm"/></div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">${LSA["setting.newpwd"]!"新密码"}</div>
+    				<div class="col-8 text-right"><input type="password" id="pwd1" class="form-control input-sm"/></div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">${LSA["setting.confpwd"]!"确认密码"}</div>
+    				<div class="col-8 text-right"><input type="password" id="pwd2" class="form-control input-sm"/></div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">&nbsp;</div>
+    				<div class="col-8 text-right"><button class="btn btn-success btn-sm" id="btn-pwd">${LSA["setting.pwdbtn"]!"确认修改"}</button></div>
+    			</div>
+    		</div>
+    	</div>
+    	
+	</div>
+	
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	<script type="text/javascript">var curuid = "<#if CURRENT_USER??>${CURRENT_USER.userid}<#else>0</#if>";</script>
+	<#include "/xtpl/wxoa-all-js.ftl">
+	
+	<script type="text/javascript">
+	$(function(){
+		$("#btn-pwd").click(function() {
+			doSubmit();
+		});
+	});
+	function doSubmit() {
+		var data = {
+			"pwd": $('#pwd').val()
+			,"pwd1": $('#pwd1').val()
+			,"pwd2": $('#pwd2').val()
+		};
+		HyUtils.post("/wxoa/modpwd.do", data, function (datobj) {
+			$('#pwd').val('');
+			$('#pwd1').val('');
+			$('#pwd2').val('');
+			toastr.info('修改成功');
+		});
+	}
+	</script>
+</body>
+</html>

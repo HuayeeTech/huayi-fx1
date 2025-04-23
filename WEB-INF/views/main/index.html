@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title><#if pgseo??>${pgseo.title!'华逸风行'}<#else>华逸风行</#if></title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="robots" content="all"/>
+	<meta name="visit-after" content="7 days"/>
+	<link href="<@spring.ctx/>/ress/images/favicon.ico?t=1.0" rel="shortcut icon" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/extjs/ress/css/ext-all.css?v=202102.1"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/default/style.css?v=202502.1"/>
+	<style type="text/css">
+		.headerwrap {background: #1565C0; height: 100%; width: 100%; line-height: 34px; color: #FFFFFF;}
+		#appNavPanel .x-tree-node-collapsed .x-tree-node-icon, 
+		#appNavPanel .x-tree-node-expanded .x-tree-node-icon, 
+		#appNavPanel .x-tree-node-leaf .x-tree-node-icon {
+			border: 0 none;
+			height: 38px;
+			margin: 0;
+			padding: 0;
+			vertical-align: top;
+			width: 32px;
+			background-position:center;
+		    background-repeat: no-repeat;
+		}
+		#appNavPanel .x-tree-node-el {
+			line-height: 42px;
+			font-size: 10pt;
+		}
+		#appNavPanel .x-tree-selected {
+			background-color: #D6EAF8;
+			font-size: 11pt;
+			border: 1px solid #6699CC;
+		}
+		#appNavPanel .x-tree-node-leaf span {color: #757575;}
+		#appNavPanel .x-tree-selected span {color: #212F3D;}
+		#appNavPanel .x-panel-body {background: #F2F3F4;}
+		
+		.mdlpadwrap {width: 480px;}
+		.mdlpadwrap a {font-size: 9pt; line-height: 24px;}
+		.mdlpadwrap a:link, .mdlpadwrap a:visited, .mdlpadwrap a:hover {color: #33CCFF; text-decoration: none;}
+		.mdlpad {height: 72px; width: 72px; float: left; margin: 12px 12px; cursor: pointer;}
+		.mdlpad .imgpad {height: 48px; width: 48px; margin: 0 auto;}
+		
+		.headerwrap {
+			width: 100%;
+			overflow: auto;
+			zoom: 1;
+		}
+		.headerwrap .logo {
+			float: left;
+			margin-left: 16px;
+		}
+		.headerwrap .usrinf {
+			float: right;
+			font-size: 11pt;
+			color: #FFFFFF;
+		}
+		.headerwrap .usrinf a, .headerwrap .usrinf a:visited, .headerwrap .usrinf a:link {
+			color: #AED6F1;
+			text-decoration: none;
+		}
+		.headerwrap .usrinf ul>li {
+			float: left;
+			margin-right: 16px;
+		}
+		.headerwrap .usrinf ul>li a.logout {
+			color: #EF9A9A;
+		}
+		#footerPanel {
+			font-size: 9pt;
+			line-height: 1.2rem;
+			text-align: center;
+		}
+		#footerPanel span {
+			margin-right: 12px;
+		}
+		#footerPanel .orginfo {
+			color: #515A5A;
+		}
+		#footerPanel .copyright {
+			color: #979A9A;
+		}
+		#footerPanel .ver {
+			color: #ABB2B9;
+		}
+		#langbox {
+			width: 120px;
+			border: 0px solid #fff;
+			padding-top: 5px;
+		}
+	</style>
+	
+	<#include "/xtpl/extlibs.ftl">
+	
+	<script type="text/javascript" src="<@spring.ctx/>/ress/extjs/ux/TabCloseMenu.js"></script>
+	<script type="text/javascript" src="<@spring.ctx/>/ress/extjs/ux/GroupTabPanel.js"></script>
+	<script type="text/javascript" src="<@spring.ctx/>/ress/extjs/ux/GroupTab.js"></script>
+	<script type="text/javascript" charset="utf-8">
+	var _todatpkid = "${todatpkid!''}";
+	var _tomdl = '${tomdl!""}';
+	var _tomdlmsg = "${tomdlmsg!''}";
+	var _defLsid = '<@spring.message "lsid"/>';
+	Ext.ns("Ext.HY.AppView");
+	var appView = Ext.HY.AppView;
+	appView.navPanel = new Ext.tree.TreePanel({
+		id: 'appNavPanel',
+		region: 'west',
+		closable: false,
+		split: false,
+		header: false,
+		width: 208,
+		minSize: 58,
+		maxSize: 368,
+		collapsible: false,
+		margins: '3 3',
+		rootVisible: false,
+		lines: false,
+		useArrows: false,
+		autoScroll: true,
+		loader: new Ext.tree.TreeLoader({
+			preloadChildren: true,
+			clearOnLoad: false,
+			dataUrl: ctx + '/main/navtree.do'
+		}),
+		root: {id: '0', expanded: true, text: 'rootNode'},
+		tbar: ['MENU'],
+		listeners: {
+			'load': function(node) {
+				this.expandAll();
+				var child = this.root.firstChild;
+				try {
+					if (!HY.isEmpty(child) && this.getSelectionModel() != null)
+						this.getSelectionModel().select(child);
+					this.loadNavView(child);
+				} catch (e) {
+					HY.alert(e);
+				}
+			},
+			'click': function(node, e){
+				this.loadNavView(node);
+			}
+		},
+		loadNavView: function(node) {
+			var nodeUrl = node.attributes['url'];
+			if (!HY.isEmpty(nodeUrl) && '#login' == nodeUrl) {
+				// 打开登录窗口
+				HY.showLoginWindow();
+				return;
+			}
+			HY.AjaxGetHtml({
+				url: ctx + "/main/navview/" + node.id + ".do",
+				params: {},
+				showWat: false,
+				callback: function (result) {
+					appView.navViewPanel.update(result);
+				}
+			});
+		}
+	});
+	appView.navViewPanel = new Ext.Panel({
+		id: 'appNavViewPanel',
+		region: 'center',
+		margins: '3 3 3 0',
+		html: '',
+		cls: 'ne-x-panel'
+	});
+	appView.headerPanel = new Ext.Panel({
+		region: 'north',
+		border: false,
+		margins: '0 0',
+		height: 36
+	});
+	appView.footerPanel = new Ext.Panel({
+		id: 'footerPanel',
+		region: 'south',
+		border: false,
+		margins: '0 0',
+		height: 24,
+		html: '<span class="orginfo">${pgseo.title!""}</span><span class="copyright">&copy; ${pgseo.copyright!""}</span><span class="ver">${pgseo.ver!""}</span>'
+	});
+	appView.mainPanel = new Ext.TabPanel({
+		id: 'appPanel',
+		region: 'center',
+		activeTab: 0,
+		deferredRender: false,
+		enableTabScroll: true,
+		margins: '0 0',
+		defaults: {
+			layout: 'fit',
+			autoScroll: true
+		},
+		plugins: new Ext.ux.TabCloseMenu({
+			closeTabText: '关闭标签页',
+			closeOtherTabsText: '关闭其他标签页',
+			closeAllTabsText: '关闭所有标签页'
+		}),
+		items: [
+			{
+				layout: 'border',
+				title: '<@spring.message "ls1017"/>',
+				iconCls: 'nav-app',
+				items: [appView.navPanel, appView.navViewPanel]
+			}
+		]
+	});
+	appView.loadHeader = function() {
+		HY.AjaxGetHtml({
+			url: ctx + "/main/render.do?v=202502.1",
+			params: {to: 'main/header'},
+			showWat: false,
+			callback: function (result) {
+				appView.headerPanel.update(result);
+				appView.createLangbox();
+			}
+		});
+	};
+	appView.modpwdWin = new HY.Cmp.WindowEditMst({
+		title: '<@spring.message "ls1313"/>',
+		width: 270,
+		height: 168,
+		formFields: [
+			{layout: 'form', border: false, width: 240, height: 90, items:[
+				{xtype: 'textfield', fieldLabel: '<@spring.message "ls1640"/>', id: 'userpsw', name: 'psw', inputType: 'password', allowBlank: false, width: 120, blankText: '<@spring.message "ls1644"/>'},
+				{xtype: 'textfield', fieldLabel: '<@spring.message "ls1641"/>', id: 'userpsw1', name: 'psw1', inputType: 'password', allowBlank: false, width: 120, blankText: '<@spring.message "ls9457"/>'},
+				{xtype: 'textfield', fieldLabel: '<@spring.message "ls1642"/>', id: 'userpsw2', name: 'psw2', inputType: 'password', allowBlank: false, width: 120, blankText: '<@spring.message "ls9458"/>', vtype: 'password', confirmTo: 'userpsw1'}
+			]}
+		],
+		buttons: [
+			{text: '<@spring.message "ls1642"/>', iconCls: 'tbar-accept', handler: function(){
+				var frm = appView.modpwdWin.formPanel.getForm();
+				if (!frm.isValid()) {
+					return;
+				}
+				HY.confirm ({
+					callback: function() {
+						var params = frm.getValues();
+						HY.AjaxRequest({
+							params: params,
+							showMsg: true,
+							url: ctx + '/main/modpwd.action',
+							callback: function(datobj) {
+								appView.modpwdWin.hide();
+							}
+						});
+					}
+				});
+			}},
+			{text: '<@spring.message "ls1957"/>', iconCls: 'tbar-cancel', handler: function(){
+				appView.modpwdWin.hide();
+			}}
+		]
+	});
+	Ext.onReady(function(){
+		Ext.QuickTips.init();
+		var viewport = new Ext.Viewport({
+			layout: 'border',
+			items: [
+				appView.headerPanel,
+				appView.mainPanel,
+				appView.footerPanel
+			]
+		});
+		appView.loadHeader();
+		
+		window.setTimeout(function(){
+			appView.dealWQ();
+		}, 500);
+		window.setInterval("HY.fireBeat()",600000);
+	});
+	appView.logout = function(){
+		HY.confirm({msg: '<@spring.message "ls6589"/>', callback: function(){
+			var win = window;
+			if (win.parent) {
+				win = win.parent;
+			}
+			win.location.href = ctx + '/logout.do';
+		}})
+	};
+	appView.dealWQ = function(){
+		if (!HY.isEmpty(_tomdlmsg)) {
+			HY.alert(_tomdlmsg);
+		} else if (!HY.isEmpty(_todatpkid) && HY.isNumber(_todatpkid) && !HY.isEmpty(_tomdl)) {
+			try {
+				var mdlinf = Ext.decode(_tomdl);
+				var url = mdlinf.url.trim();
+				if (!url.endsWith('?')) {
+					url += '?'
+				} else if (!url.endsWith('&')) {
+					url += '&'
+				}
+				url += 'datpkid=' + _todatpkid;
+				HY.openInMain(mdlinf.id, mdlinf.title, url, {iconCls: mdlinf.iconcls});
+			} catch (e) {
+				HY.alert(e.description);
+			}
+		}
+	};
+	appView.showModPsw = function() {
+		var me = this;
+		var frm = me.modpwdWin.formPanel.getForm();
+		HY.Cmp.clearFormData(frm);
+		me.modpwdWin.show();
+		frm.clearInvalid();
+	};
+	appView.quicklyWin = new HY.Cmp.WindowEditMst({
+		title: '入仓号快捷登录',
+		width: 270,
+		height: 168,
+		formFields: [
+			{layout: 'form', border: false, width: 240, height: 90, items:[
+				{xtype: 'textfield', fieldLabel: '入仓号', id: 'usercode', name: 'usercode', allowBlank: false, width: 120},
+				{xtype: 'textfield', fieldLabel: '密码', id: 'password', name: 'password', inputType: 'password', allowBlank: false, width: 120, blankText: '密码不能为空'},
+			]}
+		],
+		buttons: [
+			{text: '登录', iconCls: 'tbar-accept', handler: function(){
+				var frm = appView.quicklyWin.formPanel.getForm();
+				var uid = frm.getValues().usercode;
+				var psw = frm.getValues().password;
+				HY.confirm ({
+					callback: function() {
+						var params = frm.getValues();
+						HY.AjaxRequest({
+							params: params,
+							showMsg: true,
+							url: ctx + '/jobstk/quickqry/quickloginchk.do',
+							callback: function(datobj) {
+								window.location.href = ctx + '/jobstk/quickqry/quicklogin.do?uid='+ uid + '&psw='+psw;
+							}
+						});
+						
+					}
+				});
+				
+			}},
+			{text: '<@spring.message "ls1957"/>', iconCls: 'tbar-cancel', handler: function(){
+				appView.quicklyWin.hide();
+			}}
+		]
+	});
+	appView.showQuicklyWin = function() {
+		var me = this;
+		var frm = me.quicklyWin.formPanel.getForm();
+		HY.Cmp.clearFormData(frm);
+		me.quicklyWin.show();
+		frm.clearInvalid();
+	};
+	appView.langs = [
+		{text: '简体中文', iconCls: 'tbar-lang-cn', langid: 1, langs: 'zh_CN'},
+		{text: '繁体中文', iconCls: 'tbar-lang-zh', langid: 2, langs: 'zh_TW'},
+		{text: 'English', iconCls: 'tbar-lang-en', langid: 3, langs: 'en'}
+	];
+	appView.createLangbox = function() {
+		appView.langTbar = new Ext.Toolbar({width: 100, renderTo: 'langbox', items: [
+			{text: '简体中文', iconCls: 'tbar-lang-cn', menu: new Ext.menu.Menu({
+				id: 'langMenu',
+				items: [
+					{text: appView.langs[0].text, iconCls: appView.langs[0].iconCls, handler: function(o) {appView.doChangeLang(appView.langs[0].langid);}},
+					{text: appView.langs[1].text, iconCls: appView.langs[1].iconCls, handler: function(o) {appView.doChangeLang(appView.langs[1].langid);}},
+					{text: appView.langs[2].text, iconCls: appView.langs[2].iconCls, handler: function(o) {appView.doChangeLang(appView.langs[2].langid);}}
+				]
+			})}
+		]});
+		appView.langTbar.doLayout();
+		appView.doChangeLangbox(_defLsid);
+	};
+	appView.doChangeLang = function(langid) {
+		var langItem = appView.getLangInfo(langid);
+		var curHref = window.location.href;
+		if (curHref.indexOf('locale') > -1) {
+			curHref = curHref.substr(0, curHref.indexOf('locale'));
+		} else {
+			if (curHref.indexOf("?") > -1) {
+				curHref += "&";
+			} else {
+				curHref += "?";
+			}
+		}
+		curHref += "locale=" + langItem.langs;
+		window.location.href = curHref;
+		window.reload();
+	};
+
+	appView.doChangeLangbox = function(langid) {
+		var langItem = appView.getLangInfo(langid);
+		appView.langTbar.items.get(0).setText(langItem.text);
+		appView.langTbar.items.get(0).setIconClass(langItem.iconCls);
+	};
+	appView.getLangInfo = function(lsid) {
+		var arr = appView.langs;
+		var inx = 0;
+		for (var i = 0; i < arr.length; i++) {
+			if (lsid == arr[i].langid) {
+				inx = i;
+			} 
+		}
+		return arr[inx];
+	}
+	</script>
+</head>
+<body scroll="no">
+
+</body>
+</html>

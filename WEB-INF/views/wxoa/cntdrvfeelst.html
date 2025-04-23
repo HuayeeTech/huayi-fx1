@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?v=202103.1"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/bootstrap-datetimepicker.css" media="screen"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+		.btn-attach {
+			border: 1px solid #73C6B6;
+			padding: 2px 8px;
+		}
+		#tb1 {
+			min-width: 1000px;
+		}
+		#table-wrapper {
+			padding-left: 3px;
+			padding-right: 3px;
+		}
+		.btn-txt {
+			border: 1px solid #A6ACAF;
+			padding: 1px 5px;
+			background: #D5F5E3;
+		}
+		.input-clear {
+			margin-left: -12px;
+		}
+		.bootstrap-datetimepicker-widget.dropdown-menu {
+		  margin: 2px 0;
+		  padding: 2px;
+		  width: 11em;
+		  font-size: 0.6em;
+		}
+		
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="<@spring.ctx/>/wxoa/index.action"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["cntdrvfeelst.head"]!"司机费用查询"}</h6>
+			</div>
+			<!-- Filter Option-->
+			<div class="filter-option" id="sideNavbarToggler"><i class="icofont-search"></i></div>
+		</div>
+	</div>
+	
+	<!-- Sidenav Black Overlay-->
+	<div class="sidenav-black-overlay"></div>
+	<!-- Side Nav Wrapper-->
+	<div class="suha-sidenav-wrapper filter-nav" id="sidenavWrapper">
+		<!-- Catagory Sidebar Area-->
+		<div class="catagory-sidebar-area">
+			<!-- Catagory-->
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">M/BL No.</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_blnom"/>
+						<a class="input-clear" style="pointer-events: auto;" onclick="$('#srh_blnom').val('')">x</a>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["cntdrvfeelst.cntno"]!"箱号"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_cntno"/>
+						<a class="input-clear" style="pointer-events: auto;" onclick="$('#srh_cntno').val('')">x</a>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["cntdrvfeelst.feedatefm"]!"录入日期起始"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_feedatefm"/>
+						<a class="input-clear" style="pointer-events: auto;" onclick="$('#srh_feedatefm').val('')">x</a>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-3">
+				<h6 class="widget-title mb-0">${LSA["cntdrvfeelst.feedateto"]!"录入日期截止"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_feedateto"/>
+						<a class="input-clear" style="pointer-events: auto;" onclick="$('#srh_feedateto').val('')">x</a>
+					</div>
+				</div>
+			</div>
+			<!-- Apply Filter-->
+			<div class="apply-filter-btn"><a class="btn btn-success" href="javascript:void(0)" id="btn-search">${LSA["cntdrvfeelst.searchbtn"]!"搜索"}</a></div>
+		</div>
+	</div>
+    
+    <div class="page-content-wrapper">
+    	<div class="container-fluid">
+			<div class="row" id="table-wrapper">
+				<div class="table-responsive-sm">
+					<table id="tb1" class="table table-bordered table-striped table-light table-sm" data-striped="true">
+						<thead>
+							<tr>
+								<th>${LSA["cntdrvfeelst.cntno"]!"箱号"}</th>
+								<th>${LSA["cntdrvfeelst.amtsum"]!"总金额"}</th>
+								<th class="text-center">${LSA["cntdrvfeelst.attcount"]!"附件"}</th>
+								<th class="text-center">${LSA["cntdrvfeelst.amtcreatedate"]!"录入日期"}</th>
+								<th class="">${LSA["cntdrvfeelst.amtdesc"]!"费用明细"}</th>
+								<th>M/BL No.</th>
+								<th>${LSA["cntdrvfeelst.vevo"]!"船名航次"}</th>
+								<th class="text-center">ETD</th>
+								<th class="text-center">${LSA["cntdrvfeelst.cmdate"]!"截关日"}</span></th>
+							</tr>
+						</thead>
+						<tbody id="datrows-container">
+							<tr style="display: none;" id="{cntpkid}">
+								<td>{cntno}</td>
+								<td>{amtsum}</td>
+								<td class="text-center">{attcount}</td>
+								<td class="text-center">{amtcreatedatedesc}</td>
+								<td>{amtdesc}</td>
+								<td>{blnom}</td>
+								<td>{vessel}&nbsp;/&nbsp;{voyage}</td>
+								<td class="text-center">{etddesc}</td>
+								<td class="text-center">{cmdatedesc}</td>
+							</tr>
+							<tr><td colspan="9"><div class="icon-loading">Loading......</div></td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="row" style="margin-top: 12px;">
+				<div class="col-12 text-center"><button type="button" class="btn btn-sm btn-info" id="btn-loadmore">${LSA["cntdrvfeelst.loadbtn"]!"加载更多"}...</button></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="docxModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="docxModalLabel">${LSA["cntdrvfeelst.edocview"]!"附件浏览"}</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+			    	<div id="docx-container">
+			    		<div class="icon-loading">Loading......</div>
+	 					<div class="image-item"><img alt="" src="https://cdn.jsdelivr.net/npm/@bootcss/www.bootcss.com@0.0.3/dist/img/jqueryapi.png" data-xphoto="docx1" data-xsrc=""/></div>
+	 					<div class="image-item"><img alt="" src="https://cdn.jsdelivr.net/npm/@bootcss/www.bootcss.com@0.0.3/dist/img/jqueryapi.png" data-xphoto="docx1" data-xsrc=""/></div>
+	 					<div class="image-item"><img alt="" src="https://cdn.jsdelivr.net/npm/@bootcss/www.bootcss.com@0.0.3/dist/img/jqueryapi.png" data-xphoto="docx1" data-xsrc=""/></div>
+		    		</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript" src="<@spring.ctx/>/ress/js/moment.min.js"></script>
+	<script type="text/javascript" src="<@spring.ctx/>/ress/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+	var curpkid = 0, curstatus = '';
+	var curPage = 1,
+    curLimit = 20;
+	$(function(){
+		$('#srh_feedatefm').datetimepicker({
+			format: 'YYYY-MM-DD'
+		});
+		$('#srh_feedateto').datetimepicker({
+			format: 'YYYY-MM-DD'
+		});
+		
+		doRefresh(true);
+		
+		$('#btn-search').click(function(event){
+			curPage = 1;
+			addLoading();
+			doRefresh(true);
+		});
+		$('#btn-loadmore').click(function(){
+			curPage ++;
+			doRefresh();
+		});
+	});
+	
+	function doRefresh (isClear) {
+		var data = {
+				"blnom": $("#srh_blnom").val(),
+				"cntno": $("#srh_cntno").val(),
+				"feedatefm": $("#srh_feedatefm").val(),
+				"feedateto": $("#srh_feedateto").val(),
+				"page": curPage,
+				"limit": curLimit
+			};
+		HyUtils.post("/wxoa/cntdrvfeelstdat.do", data, function (datobj) {
+			if (isClear === true) clearList();
+			var gd = datobj;
+			if (gd && gd.rows && gd.rows.length > 0) {
+				var tpl = $('script[type="text/template"][id="list"]').html();
+				var arr = [];
+				$.each(gd.rows, function(i, o) {
+					o.attlink = (o.attcount > 0) ? '<a href="javascript:void(0)" onclick="showDocxView(\'' + o.jobid + '\')" class="btn-txt">' + o.attcount + '</a>' : '无';
+					arr.push(HyUtils.formatTemplate(o, tpl));
+				});
+				$('#datrows-container').append(arr.join(''));
+			} else {
+				toastr.info('没有更多数据了^_^');
+			}
+		});
+	}
+	function clearList (){
+		$('#datrows-container').empty();
+	};
+	function addLoading(){
+		var ht = '<tr><td colspan="9"><div class="icon-loading">Loading......</div></td></tr>';
+		$('#datrows-container').empty();
+		$('#datrows-container').append(ht);
+	};
+	
+	function showDocxView (pkid) {
+		if (!HyUtils.isNumber(pkid)) {
+			toastr.warning('程序异常：无效参数值');
+			return;
+		}
+		var data = {"datpkid": pkid};
+		//$('#docxModal').modal('show');
+		//return;
+		HyUtils.post("/edocs/listdat.do", data, function (datobj) {
+			var dat = datobj;
+			$('#docx-container').empty();
+			if (dat) {
+				var tpl = $('script[type="text/template"][id="docx"]').html();
+				var arr = [];
+				
+				$.each(dat.rows, function(i, o) {
+					o.rowindex = '{index: ' + (i + 1) + '}';
+					arr.push(HyUtils.formatTemplate(o, tpl));
+				});
+				$('#docx-container').append(arr.join(''));
+				
+				$('#docxModal').modal('show');
+			} else {
+				toastr.info('没有数据');
+			}
+		});
+	};
+	</script>
+	
+	<script type="text/template" id="list">
+							<tr id="{cntpkid}">
+								<td>{cntno}</td>
+								<td class="text-right">{amtsum}</td>
+								<td class="text-center">{attlink}</td>
+								<td class="text-center">{amtcreatedatedesc}</td>
+								<td>{amtdesc}</td>
+								<td>{blnom}</td>
+								<td>{vessel}&nbsp;/&nbsp;{voyage}</td>
+								<td class="text-center">{etddesc}</td>
+								<td class="text-center">{cmdatedesc}</td>
+							</tr>
+	</script>
+	
+	<script type="text/template" id="docx">
+	<div class="image-item" onclick="xtip.photoApp('docx1', {rowindex})"><img alt="" src="{thumdata}" data-xphoto="docx1" data-xsrc="<@spring.ctx/>/edocs/download.do?docid={docid}"/></div>
+	</script>
+</body>
+</html>

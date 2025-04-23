@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title>华逸风行微信应用</title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?23"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="javascript:history.go(-1)"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["istkview.head"]!"托运单详情"}</h6>
+			</div>
+			<!-- Navbar Toggler-->
+			<div class="suha-navbar-toggler d-flex justify-content-between flex-wrap" id="sideNavbarToggler"><span></span><span></span><span></span></div>
+		</div>
+	</div>
+	
+	<#include "/wxoa/widget/sidenav-main.ftl">
+    
+    <div class="page-content-wrapper">
+    	<div class="selection-panel bg-white mb-3 py-3">
+    		<div class="container" id="mst-container">
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title" style="display: none;"><span>Full Name</span></div>
+ 					<div class="data-content" style="display: none;">SUHA JANNAT</div>
+ 					<div class="icon-loading">Loading......</div>
+ 				</div>
+    		</div>
+    	</div>
+    	<div class="selection-panel bg-white mb-3 py-3">
+    		<div class="container" id="gds-container">
+    			<div class="card user-data-card bg-light">
+    				<div class="card-body">
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title" style="display: none;"><span>${LSA["istkview.gdsnameen"]!"货物英文名"}</span></div>
+		 					<div class="data-content" style="display: none;">{goodsname_e}</div>
+ 							<div class="icon-loading">Loading......</div>
+		 				</div>
+		 			</div>
+	 			</div>
+    		</div>
+    	</div>
+	</div>
+	
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript">
+	var pkid = '${pkid}';
+	$(function(){
+		doRefresh(pkid);
+	});
+	
+	function doRefresh(id) {
+		var data = {
+				"pkid": id
+			};
+		HyUtils.post("/wxoa/istkviewdat.do", data, function (datobj) {
+			var dat = datobj;
+			$('#mst-container').empty();
+			$('#gds-container').empty();
+			if (dat) {
+				var tpl = $('script[type="text/template"][id="mst"]').html();
+				var arr = [];
+
+				dat.ar_statusdesc = (dat.ar_status == 'C' || dat.ar_status === '') ? '已结算' : '未结算';
+				dat.imgname = (dat.ar_statusdesc == '已结算') ? 'lightbulb_gray.png' : 'lightbulb_yellow.png';
+				dat.datedesc = HyUtils.isEmpty (dat.actdatedesc) ? dat.stodatedesc : dat.actdatedesc;
+				dat.istono = (HyUtils.isEmpty(dat.salescode) ? '' : dat.salescode) + '-'
+							+ (HyUtils.isEmpty(dat.podcode) ? '' : dat.podcode) + '-'
+							+ (HyUtils.isEmpty(dat.cliextcode) ? '' : dat.cliextcode)
+							+ (HyUtils.isEmpty(dat.refno) ? '' : '-' + dat.salescode);
+				
+				arr.push(HyUtils.formatTemplate(dat, tpl));
+				$('#mst-container').append(arr.join(''));
+				var gd = dat.dtlgrid;
+				if (gd && gd.rows && gd.rows.length > 0) {
+					arr = [];
+					tpl = $('script[type="text/template"][id="gds"]').html();
+					$.each(gd.rows, function(i, o) {
+						arr.push(HyUtils.formatTemplate(o, tpl));
+					});
+					$('#gds-container').append(arr.join(''));
+				}
+			} else {
+				toastr.info('没有数据');
+			}
+		});
+	}
+	</script>
+	
+	<script type="text/template" id="mst">
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["istkview.stono"]!"入库单号"}：</span></div>
+ 					<div class="data-content">{stono}</div>
+ 				</div>
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["istkview.istono"]!"入仓号"}：</span></div>
+ 					<div class="data-content">{istono}</div>
+ 				</div>
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["istkview.isdate"]!"入库日期"}：</span></div>
+ 					<div class="data-content">{datedesc}</div>
+ 				</div>
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["istkview.isdepot"]!"入库仓库"}：</span></div>
+ 					<div class="data-content">{depotname}</div>
+ 				</div>
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["istkview.pod"]!"目的港"}：</span></div>
+ 					<div class="data-content">{podcode} / {pod}</div>
+ 				</div>
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["istkview.tpieces"]!"总件数"}：</span></div>
+ 					<div class="data-content">{pieces}</div>
+ 				</div>
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["istkview.tgrswgt"]!"总毛重"}：</span></div>
+ 					<div class="data-content">{grswgt} KGS</div>
+ 				</div>
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["istkview.tgdscbm"]!"总体积"}：</span></div>
+ 					<div class="data-content">{gdscbm} CBM</div>
+ 				</div>
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["istkview.remarks"]!"备注"}：</span></div>
+ 					<div class="data-content">{remarks}</div>
+ 				</div>
+	</script>
+	
+	<script type="text/template" id="gds">
+    			<div class="card user-data-card bg-light">
+    				<div class="card-body">
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["istkview.gdsname"]!"货物名称"}</span></div>
+		 					<div class="data-content">{goodsname_c}</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["istkview.gdsnameen"]!"货物英文名"}</span></div>
+		 					<div class="data-content">{goodsname_e}</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["istkview.gdssize"]!"规格"}(L/W/H)</span></div>
+		 					<div class="data-content">{gdslength} / {gdswidth} / {gdsheight}</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["istkview.pipk"]!"件数包装"}</span></div>
+		 					<div class="data-content">{pieces} {packing}</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["istkview.grswgt"]!"毛重"}</span></div>
+		 					<div class="data-content">{grswgt} KGS</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["istkview.gdscbm"]!"体积"}</span></div>
+		 					<div class="data-content">{gdscbm} CBM</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["istkview.gdstype"]!"货类"}</span></div>
+		 					<div class="data-content">{gdstype}</div>
+		 				</div>
+		 			</div>
+	 			</div>
+	</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?v=16"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Logo Wrapper-->
+			<div class="logo-wrapper"><a href="index.action"><img src="<@spring.ctx/>/ress/images/core-img/logo-small.png" alt=""></a></div>
+			<!-- Search Form-->
+			<div class="top-search-form">
+				<h1 class="header-title"><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></h1>
+			</div>
+			<!-- Navbar Toggler-->
+			<div class="suha-navbar-toggler d-flex justify-content-between flex-wrap" id="sideNavbarToggler"><span></span><span></span><span></span></div>
+		</div>
+	</div>
+	
+	<#include "/wxoa/widget/sidenav-main.ftl">
+    
+    <div class="page-content-wrapper">
+    	<!-- Hero Slides-->
+		<div class="hero-slides owl-carousel">
+			<!-- Single Hero Slide-->
+			<div class="single-hero-slide">
+				<div class="slide-img"><img src="<@spring.ctx/>/edocs/banner.do?filename=wxoa-1.jpg" alt=""></div>
+				<div class="slide-content h-100 d-flex align-items-center">
+					<div class="container">
+						&nbsp;
+					</div>
+				</div>
+			</div>
+			<!-- Single Hero Slide-->
+			<div class="single-hero-slide">
+				<div class="slide-img"><img src="<@spring.ctx/>/edocs/banner.do?filename=wxoa-2.jpg" alt=""></div>
+				<div class="slide-content h-100 d-flex align-items-center">
+					<div class="container">
+						&nbsp;
+					</div>
+				</div>
+			</div>
+			<!-- Single Hero Slide-->
+			<div class="single-hero-slide">
+				<div class="slide-img"><img src="<@spring.ctx/>/edocs/banner.do?filename=wxoa-3.jpg" alt=""></div>
+				<div class="slide-content h-100 d-flex align-items-center">
+					<div class="container">
+						&nbsp;
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Product Catagories-->
+		<div class="product-catagories-wrapper pt-3">
+			<div class="container">
+				<div class="section-heading">
+					<h6 class="ml-1">${LSA["index.nav"]!"功能导航"}</h6>
+				</div>
+				<div class="module-catagory-wrap">
+					<div class="row">
+						<#if CURRENT_USER??>
+						<#if CURRENT_USER.type.typeCode == "SYS">
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/istkquery.do"><img src="<@spring.ctx/>/ress/images/core-img/istkquery.svg" alt=""><span>${LSA["index.navstkin"]!"入库查询"}</span></a></div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/stkquery.do"><img src="<@spring.ctx/>/ress/images/core-img/stkquery.svg" alt=""><span>${LSA["index.navstk"]!"库存查询"}</span></a></div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/stkcntld.do"><img src="<@spring.ctx/>/ress/images/core-img/ctloaded.svg" alt=""><span>${LSA["index.navctload"]!"装柜货物"}</span></a></div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/settle.do"><img src="<@spring.ctx/>/ress/images/core-img/settlequery.svg" alt=""><span>${LSA["index.navsettle"]!"结算管理"}</span></a></div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/stkpodquery.do"><img src="<@spring.ctx/>/ress/images/core-img/stkquery-yy.svg" alt=""><span>${LSA["index.navstkyy"]!"目的港库存"}</span></a></div>
+							</div>
+						</div>
+						</#if>
+						<#if CURRENT_USER.type.typeCode == "MEM">
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/istkquery.do"><img src="<@spring.ctx/>/ress/images/core-img/istkquery.svg" alt=""><span>${LSA["index.navstkin"]!"入库查询"}</span></a></div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/stkquery.do"><img src="<@spring.ctx/>/ress/images/core-img/stkquery.svg" alt=""><span>${LSA["index.navstk"]!"库存查询"}</span></a></div>
+							</div>
+						</div>
+						</#if>
+						
+						<#if CURRENT_USER.driverid ?? && CURRENT_USER.driverid != 0>
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/cntdrvup.do"><img src="<@spring.ctx/>/ress/images/core-img/cntup.svg?t=202112.1" alt=""><span>${LSA["index.navcntup"]!"上传箱号"}</span></a></div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/cntdrvfee.do"><img src="<@spring.ctx/>/ress/images/core-img/money_cny.svg?t=202102.1" alt=""><span>${LSA["index.navdrcny"]!"司机报销"}</span></a></div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/cntdrvfeelst.do"><img src="<@spring.ctx/>/ress/images/core-img/itemlist.svg" alt=""><span>${LSA["index.navdrexp"]!"司机费用"}</span></a></div>
+							</div>
+						</div>
+						</#if>
+						</#if>
+						<div class="col-4">
+							<div class="card mb-3 catagory-card">
+								<div class="card-body"><a href="<@spring.ctx/>/wxoa/stktrace.do"><img src="<@spring.ctx/>/ress/images/core-img/gdstrace.svg" alt=""><span>${LSA["index.navgdstra"]!"货物追踪"}</span></a></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript">
+	$(function() {
+		setTimeout(function() {
+			app.showLogin();
+		}, 1000);
+	});
+	</script>
+</body>
+</html>

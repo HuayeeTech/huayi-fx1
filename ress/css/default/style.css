@@ -1,0 +1,138 @@
+.imgbg_ok {background: url("../../images/flag_yes.png") no-repeat center;}
+.imgbg_err {background: url("../../images/flag_no.png") no-repeat center;}
+.copyright {font-size: 9pt; color: #999999; line-height: 22px;}
+
+label.x-required:before {content: '*'; color: red; font-size: 12px;}
+.textfield-readonly {background-color: rgba(228,228,228, .4); color: #003A70;}
+
+label {font-size: 9pt;}
+.title-mark {color: #4876FF;}
+
+/*table td width*/
+table.w0p {width: 100%;}
+td.w3p, th.w3p {width: 30%;}
+td.w7p, th.w7p {width: 70%;}
+
+/* Form background */
+.x-panel-body {background-color: #DFE8F6;}
+.ne-form-panel ,.ne-form-panel .x-panel-body {background-color: #FFFFFF;}
+.ne-x-panel .x-panel-body {background-color: #FFFFFF;}
+.ne-form-panel label {color: #4A4A4A}
+
+.dtltbar-title {font-weight: bolder; color: #0000FF;}
+
+.notice-dev {line-height: 32px; margin-top: 48px; text-indent: 8em; color: #626567;}
+
+textarea.nowrap {
+	white-space: pre; 
+	overflow: scroll;
+}
+
+a.celnk, a.celnk:link, a.celnk:visited {
+	color: #3498DB;
+	text-decoration: none;
+}
+a.celnk:hover {
+	color: #E74C3C;
+}
+
+
+.icon-win {background-image: url("../../images/tbar/winicon.png") !important; background-repeat: no-repeat;}
+.tbar-login {background-image: url("../../images/tbar/login_16px.png") !important; background-repeat: no-repeat;}
+.tbar-new {background-image: url("../../images/tbar/add_16px.png") !important; background-repeat: no-repeat;}
+.tbar-save {background-image: url("../../images/tbar/disk_16px.png") !important; background-repeat: no-repeat;}
+.tbar-modify {background-image: url("../../images/tbar/modify_16px.png") !important; background-repeat: no-repeat;}
+.tbar-delete {background-image: url("../../images/tbar/delete_16px.png") !important; background-repeat: no-repeat;}
+.tbar-refresh {background-image: url("../../images/tbar/refresh_16px.png") !important; background-repeat: no-repeat;}
+.tbar-preview {background-image: url("../../images/tbar/preview_16px.png") !important; background-repeat: no-repeat;}
+.tbar-print {background-image: url("../../images/tbar/print_16px.png") !important; background-repeat: no-repeat;}
+.tbar-export {background-image: url("../../images/tbar/export_16px.png") !important; background-repeat: no-repeat;}
+.tbar-rptdesi {background-image: url("../../images/tbar/design_16px.png") !important; background-repeat: no-repeat;}
+.tbar-reload {background-image: url("../../images/tbar/reload_16px.png") !important; background-repeat: no-repeat;}
+.tbar-close {background-image: url("../../images/tbar/close_16px.png") !important; background-repeat: no-repeat;}
+.tbar-prevrow {background-image: url("../../images/tbar/resultset_prev_16px.png") !important; background-repeat: no-repeat;}
+.tbar-nextrow {background-image: url("../../images/tbar/resultset_next_16px.png") !important; background-repeat: no-repeat;}
+.tbar-firstrow {background-image: url("../../images/tbar/resultset_first_16px.png") !important; background-repeat: no-repeat;}
+.tbar-lastrow {background-image: url("../../images/tbar/resultset_last_16px.png") !important; background-repeat: no-repeat;}
+.tbar-reset {background-image: url("../../images/tbar/reset_16px.png") !important; background-repeat: no-repeat;}
+.tbar-manage {background-image: url("../../images/tbar/manage_16px.png") !important; background-repeat: no-repeat;}
+.tbar-accept {background-image: url("../../images/tbar/accept_16px.png") !important; background-repeat: no-repeat;}
+.tbar-cancel {background-image: url("../../images/tbar/cancel_16px.png") !important; background-repeat: no-repeat;}
+.tbar-more {background-image: url("../../images/tbar/more_16px.png") !important; background-repeat: no-repeat;}
+.tbar-notice {background-image: url("../../images/tbar/bell_16px.png") !important; background-repeat: no-repeat;}
+.tbar-chgpsw {background-image: url("../../images/tbar/change_psw_16px.png") !important; background-repeat: no-repeat;}
+.tbar-exit {background-image: url("../../images/tbar/exit_16px.png") !important; background-repeat: no-repeat;}
+.tbar-authz {background-image: url("../../images/tbar/person_key_16px.png") !important; background-repeat: no-repeat;}
+.tbar-relogin {background-image: url("../../images/tbar/relogin_16px.png") !important; background-repeat: no-repeat;}
+.tbar-copynew {background-image: url("../../images/tbar/copynew_16px.png") !important; background-repeat: no-repeat;}
+.tbar-quickly {background-image: url("../../images/tbar/lightning_16px.png") !important; background-repeat: no-repeat;}
+.tbar-query {background-image: url("../../images/tbar/find.gif") !important; background-repeat: no-repeat;}
+.tbar-clear {background-image: url("../../images/tbar/clear.gif") !important; background-repeat: no-repeat;}
+.tbar-plus {background-image: url("../../images/tbar/plus.gif") !important; background-repeat: no-repeat;}
+.tbar-minus {background-image: url("../../images/tbar/minus.gif") !important; background-repeat: no-repeat;}
+.tbar-pen {background-image: url("../../images/tbar/pen.gif") !important; background-repeat: no-repeat;}
+.tbar-run-a {background-image: url("../../images/tbar/running_rabbit.png") !important; background-repeat: no-repeat;}
+.tbar-run-o {background-image: url("../../images/tbar/running_16px.png") !important; background-repeat: no-repeat;}
+.tbar-warning {background-image: url("../../images/tbar/warning_16px.png") !important; background-repeat: no-repeat;}
+.tbar-upload {background-image: url("../../images/tbar/upload_16px.png") !important; background-repeat: no-repeat;}
+.tbar-copy {background-image: url("../../images/tbar/copy_16px.png") !important; background-repeat: no-repeat;}
+.tbar-equal {background-image: url("../../images/tbar/equal_add_16px.png") !important; background-repeat: no-repeat;}
+.tbar-attach {background-image: url("../../images/tbar/attach_16px.png") !important; background-repeat: no-repeat;}
+.tbar-npfix {background-image: url("../../images/tbar/more_dot_16px.png") !important; background-repeat: no-repeat;}
+.tbar-lang-cn {background-image: url("../../images/tbar/lang_cn_16px.png") !important; background-repeat: no-repeat;}
+.tbar-lang-zh {background-image: url("../../images/tbar/lang_zh_16px.png") !important; background-repeat: no-repeat;}
+.tbar-lang-en {background-image: url("../../images/tbar/lang_en_16px.png") !important; background-repeat: no-repeat;}
+
+.nav-app {background-image: url("../../images/nav/bricks_16px.png") !important; background-repeat: no-repeat;}
+.nav-desk {background-image: url("../../images/nav/house_16px.png") !important; background-repeat: no-repeat;}
+.nav-mdlshp {background-image: url("../../images/nav/seaboat_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdlair {background-image: url("../../images/nav/plane_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdlpersonal {background-image: url("../../images/nav/briefcase_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdlorder {background-image: url("../../images/nav/ordermgt_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdlblchk {background-image: url("../../images/nav/blconfirm_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdlfrtqry {background-image: url("../../images/nav/freightquery_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdlacchk {background-image: url("../../images/nav/accountchk_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdltrace {background-image: url("../../images/nav/gdstrace_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdlstk {background-image: url("../../images/nav/storage_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdlsys {background-image: url("../../images/nav/sysconf_24px.png") !important; background-repeat: no-repeat;}
+.nav-mdlcrm {background-image: url("../../images/nav/customermgt_24px.png") !important; background-repeat: no-repeat;}
+.nav-nologin {background-image: url("../../images/nav/nologin_24px.png") !important; background-repeat: no-repeat;}
+.nav-login {background-image: url("../../images/nav/login_24px.png") !important; background-repeat: no-repeat;}
+
+.nav-shpbl {background-image: url("../../images/nav/contract_16px.png") !important; background-repeat: no-repeat;}
+.pad-shpbl {background-image: url("../../images/nav/contract_48px.png") !important; background-repeat: no-repeat;}
+.nav-airbl {background-image: url("../../images/nav/contract2_16px.png") !important; background-repeat: no-repeat;}
+.pad-airbl {background-image: url("../../images/nav/contract2_48px.png") !important; background-repeat: no-repeat;}
+.nav-frtfcl {background-image: url("../../images/nav/price_query_16px.png") !important; background-repeat: no-repeat;}
+.pad-frtfcl {background-image: url("../../images/nav/price_query_48px.png") !important; background-repeat: no-repeat;}
+.nav-frtlcl {background-image: url("../../images/nav/price_query_16px.png") !important; background-repeat: no-repeat;}
+.pad-frtlcl {background-image: url("../../images/nav/price_query_48px.png") !important; background-repeat: no-repeat;}
+.nav-airfrt {background-image: url("../../images/nav/freight_air_16px.png") !important; background-repeat: no-repeat;}
+.pad-airfrt {background-image: url("../../images/nav/freight_air_48px.png") !important; background-repeat: no-repeat;}
+.nav-shporder {background-image: url("../../images/nav/view_page_16px.png") !important; background-repeat: no-repeat;}
+.pad-shporder {background-image: url("../../images/nav/view_page_48px.png") !important; background-repeat: no-repeat;}
+.nav-airorder {background-image: url("../../images/nav/view_page2_16px.png") !important; background-repeat: no-repeat;}
+.pad-airorder {background-image: url("../../images/nav/view_page2_48px.png") !important; background-repeat: no-repeat;}
+.nav-settings {background-image: url("../../images/nav/settings_16px.png") !important; background-repeat: no-repeat;}
+.pad-settings {background-image: url("../../images/nav/settings_48px.png") !important; background-repeat: no-repeat;}
+.nav-istkqry {background-image: url("../../images/nav/stkinqry_16px.png") !important; background-repeat: no-repeat;}
+.pad-istkqry {background-image: url("../../images/nav/stkinqry_48px.png") !important; background-repeat: no-repeat;}
+.nav-ostkqry {background-image: url("../../images/nav/stkoutqry_16px.png") !important; background-repeat: no-repeat;}
+.pad-ostkqry {background-image: url("../../images/nav/stkoutqry_48px.png") !important; background-repeat: no-repeat;}
+.nav-stkqry {background-image: url("../../images/nav/stockqry_16px.png") !important; background-repeat: no-repeat;}
+.pad-stkqry {background-image: url("../../images/nav/stockqry_48px.png") !important; background-repeat: no-repeat;}
+.nav-shptrace {background-image: url("../../images/nav/seatrace_16px.png") !important; background-repeat: no-repeat;}
+.pad-shptrace {background-image: url("../../images/nav/seatrace_48px.png") !important; background-repeat: no-repeat;}
+.nav-airtrace {background-image: url("../../images/nav/airtrace_16px.png") !important; background-repeat: no-repeat;}
+.pad-airtrace {background-image: url("../../images/nav/airtrace_48px.png") !important; background-repeat: no-repeat;}
+.nav-stktrace {background-image: url("../../images/nav/stktrace_16px.png") !important; background-repeat: no-repeat;}
+.pad-stktrace {background-image: url("../../images/nav/stktrace_48px.png") !important; background-repeat: no-repeat;}
+.nav-stmqry {background-image: url("../../images/nav/statement_16px.png") !important; background-repeat: no-repeat;}
+.pad-stmqry {background-image: url("../../images/nav/statement_48px.png") !important; background-repeat: no-repeat;}
+.nav-mycus {background-image: url("../../images/nav/mycus_16px.png") !important; background-repeat: no-repeat;}
+.pad-mycus {background-image: url("../../images/nav/mycus_48px.png") !important; background-repeat: no-repeat;}
+.nav-cusvisit {background-image: url("../../images/nav/cusvisit_16px.png") !important; background-repeat: no-repeat;}
+.pad-cusvisit {background-image: url("../../images/nav/cusvisit_48px.png") !important; background-repeat: no-repeat;}
+.nav-cusfollow {background-image: url("../../images/nav/cusfollow_16px.png") !important; background-repeat: no-repeat;}
+.pad-cusfollow {background-image: url("../../images/nav/cusfollow_48px.png") !important; background-repeat: no-repeat;}
+

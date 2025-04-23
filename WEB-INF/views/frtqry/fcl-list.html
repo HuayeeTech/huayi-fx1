@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+	<title>海运整柜运价 - <#if pgseo??>${pgseo.title!'华逸风行'}<#else>华逸风行</#if></title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<meta name="description" content=""/>
+	<meta name="keywords" content=""/>
+	<meta name="author" content=""/>
+	<meta name="copyright" content=""/>
+	<meta name="robots" content="all"/>
+	<meta name="visit-after" content="7 days"/>
+	<link href="${rc.contextPath}/ress/images/favicon.ico?v=202103.1" rel="shortcut icon" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/extjs/ress/css/ext-all.css?v=202102.1"/>
+	<link rel="stylesheet" href="<@spring.ctx/>/ress/css/default/style.css?v=202104.2"/>
+	<style type="text/css">
+		
+	</style>
+	<#include "/xtpl/extlibs.ftl">
+	
+	<script type="text/javascript" charset="utf-8">
+	var renderPol = function(value, metaData, record, rowIndex, colIndex, store) {
+		var s = record.get('polcode') + ' / ' + record.get('pol');
+		if (s != null && s.length <= 3) s = "";
+		return s;
+	};
+	var renderPod = function(value, metaData, record, rowIndex, colIndex, store) {
+		var s = record.get('podcode') + ' / ' + record.get('pod');
+		if (s != null && s.length <= 3) s = "";
+		return s;
+	};
+	var renderPld = function(value, metaData, record, rowIndex, colIndex, store) {
+		var s = record.get('pldcode') + ' / ' + record.get('placedel');
+		if (s != null && s.length <= 3) s = "";
+		return s;
+	};
+	var renderPot = function(value, metaData, record, rowIndex, colIndex, store) {
+		var s = record.get('potcode') + ' / ' + record.get('pot');
+		if (s != null && s.length <= 3) s = "";
+		return s;
+	};
+	var renderFees = function(value, metaData, record, rowIndex, colIndex, store) {
+		var s = '<a href="javascript:void(0)" onclick="frtfclView.showFees(' + value + ')" style = "text-decoration: none;" >查看</a>';
+		return s;
+	};
+	var renderDetail = function(value, metaData, record, rowIndex, colIndex, store) {
+		var s = '<a href="javascript:void(0)" style = "text-decoration: none;">查看 </a>';
+		return s;
+	};
+	var renderOrd = function(value, metaData, record, rowIndex, colIndex, store) {
+		var s = '<a href="javascript:void(0)" onclick="HY.openInMain(\'navtree_1010\', \'海运订单\', \'/jobshp/order.do?prfm=' + value + '\', {iconCls: \'nav-shporder\'})">在线订舱 </a>';
+		return s;
+	};
+	
+	
+	var mainCols = [
+		new Ext.grid.RowNumberer({width: 36})
+		,{header: '发布日期', dataIndex: 'lastupdtime', width: 80, align: 'center', sortable: true, renderer: HY.renderAsDate}
+		,{header: '<@spring.message "ls2891"/>', dataIndex: 'shpnname', width: 130, sortable: true}
+		,{header: '<@spring.message "ls2409"/>', dataIndex: 'pol', width: 160, sortable: true, renderer: renderPol}
+		,{header: '<@spring.message "ls2652"/>', dataIndex: 'pod', width: 160, sortable: true, renderer: renderPod}
+		,{header: '<@spring.message "ls1629"/>', dataIndex: 'placedel', width: 160, sortable: true, renderer: renderPld}
+		<#if mpkLabels?? && mpkLabels.success == true>
+		<#list mpkLabels.obj.rows as lbls>
+		,{header: '${lbls.txt}', dataIndex: '${lbls.colfix}${lbls_index}', align: 'right', width: 80, sortable: false}
+		</#list>
+		</#if>
+		,{header: '<@spring.message "ls2954"/>', dataIndex: 'pot', width: 160, sortable: true, renderer: renderPot}
+		,{header: '<@spring.message "ls4096"/>', dataIndex: 'priceid', width:80, align: 'center', sortable:true, renderer: renderFees}
+		,{header: '<@spring.message "ls1871"/>', dataIndex: 'closedate', width:80, sortable: true, renderer: HY.renderAsDate}
+		,{header: '<@spring.message "ls2834"/>', dataIndex: 'saildays', width:80, sortable: true}
+		,{header: '<@spring.message "ls1585"/>', dataIndex: 'validays', width:80, sortable: true}
+		,{header: '<@spring.message "ls1547"/>', dataIndex: 'remarks', width:100, sortable: true}
+		,{header: '<@spring.message "ls1980"/>', dataIndex: 'priceid', width:70, align: 'center', sortable: true, renderer: renderDetail}
+		,{header: '在线订舱', dataIndex: 'priceid', width:100, align: 'center', sortable: true, renderer: renderOrd}
+	];
+	var feesCols = [
+		new Ext.grid.RowNumberer({width: 36}),
+		{header: '费用代码', dataIndex: 'feecode', width: 80, sortable: true}
+		,{header: '费用名称', dataIndex: 'feename_c', width: 120, sortable: true}
+		,{header: '单位', dataIndex: 'unit', align:'center', width: 60, sortable: true}
+		,{header: '币制', dataIndex: 'cyid', align:'center', width: 60, sortable: true}
+		<#if mpkLabels?? && mpkLabels.success == true>
+		<#list mpkLabels.obj.rows as lbls>
+		,{header: '${lbls.txt}', dataIndex: '${lbls.colfix}${lbls_index}', align: 'center', width: 80, sortable: false}
+		</#list>
+		</#if>
+		,{header: '单票价格', dataIndex: 'amt_x', width:80, sortable: true}
+		,{header: '备注', dataIndex: 'remarks', width:200, sortable: true}
+	];
+	</script>
+	<script type="text/javascript" src="<@spring.ctx/>/ress/views/frtqry/fcl-list.js?v=202305.6"></script>
+	<script type="text/javascript" src="<@spring.ctx/>/ress/views/frtqry/fees.js?v=202305.4"></script>
+</head>
+<body>
+	<h1 class="notice-dev">【海运整柜运价】开发中，暂未开放使用。</h1>
+</body>
+</html>

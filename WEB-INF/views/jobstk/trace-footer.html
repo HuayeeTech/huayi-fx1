@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title>华逸风行</title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="robots" content="all"/>
+	<meta name="visit-after" content="7 days"/>
+</head>
+<body>
+	<div class="defwrap">
+		
+		<#if mpk??>
+		  <span style="color: blue;">件数：[${mpk.obj.pieces!''}]</span>
+		  <span style="color: blue;">毛重：[${mpk.obj.grswgt?string('0.00000')}]</span>
+		  <span style="color: blue;">体积：[${mpk.obj.gdscbm?string('0.000000')}]</span>
+		</#if>
+	</div>
+</body>
+</html>

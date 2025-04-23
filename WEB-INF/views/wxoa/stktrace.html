@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?20"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="<@spring.ctx/>/wxoa/index.action"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["stktrace.head"]!"货物追踪"}</h6>
+			</div>
+			<!-- Filter Option-->
+			<div class="filter-option" id="sideNavbarToggler"><i class="icofont-search"></i></div>
+		</div>
+	</div>
+	
+	<!-- Sidenav Black Overlay-->
+	<div class="sidenav-black-overlay"></div>
+	<!-- Side Nav Wrapper-->
+	<div class="suha-sidenav-wrapper filter-nav" id="sidenavWrapper">
+		<!-- Catagory Sidebar Area-->
+		<div class="catagory-sidebar-area">
+			<!-- Catagory-->
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stktrace.istono"]!"入库单号"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_istono"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stktrace.ostono"]!"出库单号"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_ostono"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stktrace.sales"]!"业务员"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_sales"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-3">
+				<h6 class="widget-title mb-0">${LSA["stktrace.clicode"]!"客户代码"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_clicode"/>
+					</div>
+				</div>
+			</div>
+			<!-- Apply Filter-->
+			<div class="apply-filter-btn"><a class="btn btn-success" href="javascript:void(0)" id="btn-search">${LSA["stktrace.search"]!"搜索"}</a></div>
+		</div>
+	</div>
+    
+    <div class="page-content-wrapper">
+    	<div class="container-fluid">
+			<div class="row" id="datrows-container">
+				<div class="col-12" style="display: none;">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="media-left media-middle media-bottom">
+								<img src="<@spring.ctx/>/ress/images/core-img/lightbulb_gray.png" width="48" alt="">
+							</div>
+							<div class="media-body">
+								<div class="sub-item">
+									<em class="sub-title">{stono}&nbsp;</em><div class="data-content text-right">&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.icustomno"]!"入仓号"}：</em><div class="data-content text-right">{istono}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.datedesc"]!"入库日期"}：</em><div class="data-content text-right">{datedesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.stkstatus"]!"出库状态"}：</em><div class="data-content text-right">{stkstatus}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.outdate"]!"出库日期"}：</em><div class="data-content text-right">{outdatedesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.outstono"]!"出库单号"}：</em><div class="data-content text-right">{outstono}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>ETD：</em><div class="data-content text-right">{etddesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>ETA：</em><div class="data-content text-right">{etadesc}&nbsp;</div>
+								</div>
+								<!--<div class="sub-item"> -->
+								<!--	<em>${LSA["stktrace.devadate"]!"目的港拆柜"}：</em><div class="data-content text-right">{devanningdate}&nbsp;</div> -->
+								<!--</div> -->
+								<div class="sub-item">
+									<em>${LSA["stktrace.dtbdate"]!"派送时间"}：</em><div class="data-content text-right">{dtbdate}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.dtbaddr"]!"派送地点"}：</em><div class="data-content text-right">{dtbaddr}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.dtbimg"]!"签收图片"}：</em><div class="data-content text-right">{dtbimgnames}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em></em><div class="data-content text-right"><a class="btn btn-success btn-sm" href="<@spring.ctx/>/wxoa/istkview.do"><i class="mr-1 icofont-page"></i>${LSA["stktrace.desc"]!"详情"}</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="icon-loading">Loading......</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12 text-center"><button type="button" class="btn btn-info" id="btn-loadmore">${LSA["stktrace.loadbtn"]!"加载更多"}...</button></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="dtlModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">${LSA["stktrace.desc"]!"详情"}</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body" id="dtl-container">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="docxModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="docxModalLabel">${LSA["stktrace.docxview"]!"附件浏览"}</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+			    	<div id="docx-container">
+			    		<div class="icon-loading">Loading......</div>
+	 					<div class="image-item"><img alt="" src="https://cdn.jsdelivr.net/npm/@bootcss/www.bootcss.com@0.0.3/dist/img/jqueryapi.png" data-xphoto="docx1" data-xsrc=""/></div>
+	 					<div class="image-item"><img alt="" src="https://cdn.jsdelivr.net/npm/@bootcss/www.bootcss.com@0.0.3/dist/img/jqueryapi.png" data-xphoto="docx1" data-xsrc=""/></div>
+	 					<div class="image-item"><img alt="" src="https://cdn.jsdelivr.net/npm/@bootcss/www.bootcss.com@0.0.3/dist/img/jqueryapi.png" data-xphoto="docx1" data-xsrc=""/></div>
+		    		</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript">
+	$(function(){
+		var curPage = 1,
+		    curLimit = 20;
+		var doRefresh = function(isClear) {
+			var data = {
+					"istono": $("#srh_istono").val(),
+					"ostono": $("#srh_ostono").val(),
+					"clicode": $("#srh_clicode").val(),
+					"sales": $("#srh_sales").val(),
+					"page": curPage,
+					"limit": curLimit
+				};
+			HyUtils.post("/wxoa/stktracedat.do", data, function (datobj) {
+				if (isClear === true) clearList();
+				var gd = datobj;
+				if (gd && gd.rows && gd.rows.length > 0) {
+					var tpl = $('script[type="text/template"][id="list"]').html();
+					var arr = [];
+					$.each(gd.rows, function(i, o) {
+						o.imgname = (o.stkstatus == '已出库') ? 'lightbulb_gray.png' : 'lightbulb_yellow.png';
+						o.datedesc = HyUtils.isEmpty (o.actdatedesc) ? o.stodatedesc : o.actdate;
+						o.istono = (HyUtils.isEmpty(o.salescode) ? '' : o.salescode) + '-'
+									+ (HyUtils.isEmpty(o.podcode) ? '' : o.podcode) + '-'
+									+ (HyUtils.isEmpty(o.jobcliextcode) ? '' : o.jobcliextcode)
+									+ (HyUtils.isEmpty(o.refno) ? '' : '-' + o.refno);
+						o.docxopr = (o.dtbimgqty > 0 ? '<a class="btn btn-info btn-sm" href="javascript:void(0);" onclick="showDocxView(' + o.stoid + ')"><i class="mr-1 icofont-paper-clip"></i>' + o.dtbimgqty + ' 张</a>' : '无');
+						arr.push(HyUtils.formatTemplate(o, tpl));
+					});
+					$('#datrows-container').append(arr.join(''));
+				} else {
+					toastr.info('没有更多数据了^_^');
+				}
+			});
+		};
+		var clearList = function(){
+			$('#datrows-container').empty();
+		};
+		var addLoading = function(){
+			var ht = '<div class="col-12"><div class="card mediaview-card mb-3"><div class="card-body d-flex align-items-center"><div class="icon-loading">Loading......</div></div></div></div>';
+			$('#datrows-container').empty();
+			$('#datrows-container').append(ht);
+		};
+		
+		doRefresh(true);
+		
+		$('#btn-search').click(function(event){
+			curPage = 1;
+			addLoading();
+			doRefresh(true);
+		});
+		$('#btn-loadmore').click(function(){
+			curPage ++;
+			doRefresh();
+		});
+	});
+	
+	function showDtlView (pkid) {
+		if (!HyUtils.isNumber(pkid)) {
+			toastr.warning('程序异常：无效参数值');
+			return;
+		}
+		var data = {"pkid": pkid};
+		HyUtils.post("/wxoa/stktraceviewdat.do", data, function (datobj) {
+			$('#dtl-container').empty();
+			var gd = datobj;
+			if (gd && gd.rows && gd.rows.length > 0) {
+				var tpl = $('script[type="text/template"][id="dtl"]').html();
+				var arr = [];
+				$.each(gd.rows, function(i, o) {
+					arr.push(HyUtils.formatTemplate(o, tpl));
+				});
+				$('#dtl-container').append(arr.join(''));
+				$('#dtlModal').modal('show');
+			} else {
+				toastr.info('没有数据');
+			}
+		});
+	}
+	function showDocxView (pkid) {
+		if (!HyUtils.isNumber(pkid)) {
+			toastr.warning('程序异常：无效参数值');
+			return;
+		}
+		var data = {"datpkid": pkid, "istk": '2'};
+		//$('#docxModal').modal('show');
+		//return;
+		HyUtils.post("/edocs/listdat.do", data, function (datobj) {
+			var dat = datobj;
+			$('#docx-container').empty();
+			if (dat) {
+				var tpl = $('script[type="text/template"][id="docx"]').html();
+				var arr = [];
+				
+				$.each(dat.rows, function(i, o) {
+					o.rowindex = '{index: ' + (i + 1) + '}';
+					arr.push(HyUtils.formatTemplate(o, tpl));
+				});
+				$('#docx-container').append(arr.join(''));
+				
+				$('#docxModal').modal('show');
+			} else {
+				toastr.info('没有数据');
+			}
+		});
+	}
+	</script>
+	
+	<script type="text/template" id="list">
+				<div class="col-12">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="media-left media-middle media-bottom">
+								<img src="<@spring.ctx/>/ress/images/core-img/lightbulb_gray.png" width="48" alt="">
+							</div>
+							<div class="media-body">
+								<div class="sub-item">
+									<em class="sub-title">{stono}&nbsp;</em><div class="data-content text-right">&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.icustomno"]!"入仓号"}：</em><div class="data-content text-right">{istono}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.datedesc"]!"入库日期"}：</em><div class="data-content text-right">{datedesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.stkstatus"]!"出库状态"}：</em><div class="data-content text-right">{stkstatus}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.outdate"]!"出库日期"}：</em><div class="data-content text-right">{outdatedesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.outstono"]!"出库单号"}：</em><div class="data-content text-right">{outstono}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>ETD：</em><div class="data-content text-right">{etddesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>ETA：</em><div class="data-content text-right">{etadesc}&nbsp;</div>
+								</div>
+								<!-- <div class="sub-item">
+									<em>${LSA["stktrace.devadate"]!"目的港拆柜"}：</em><div class="data-content text-right">{devanningdate}&nbsp;</div>
+								</div> -->
+								<div class="sub-item">
+									<em>${LSA["stktrace.dtbinfo"]!"派送情况"}：</em><div class="data-content text-right">{dtbinfo}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stktrace.dtbimg"]!"签收图片"}：</em><div class="data-content text-right">{docxopr}</div>
+								</div>
+								<div class="sub-item" style="padding-top: 3px;">
+									<em></em><div class="data-content text-right"><a class="btn btn-success btn-sm" href="javascript:void(0);" onclick="showDtlView({stoid})"><i class="mr-1 icofont-page"></i>${LSA["stktrace.desc"]!"详情"}</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	</script>
+	<script type="text/template" id="dtl">
+    			<div class="card user-data-card bg-light">
+    				<div class="card-body">
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["stktrace.gdsname"]!"货物名称"}</span></div>
+		 					<div class="data-content">{goodsname_c}</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["stktrace.gdsnameen"]!"货物英文名"}</span></div>
+		 					<div class="data-content">{goodsname_e}</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["stktrace.gdssize"]!"规格"}(L/W/H)</span></div>
+		 					<div class="data-content">{gdslength} / {gdswidth} / {gdsheight}</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["stktrace.pipa"]!"件数包装"}</span></div>
+		 					<div class="data-content">{pieces} {packing}</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["stktrace.grswgt"]!"毛重"}</span></div>
+		 					<div class="data-content">{grswgt} KGS</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["stktrace.gdscbm"]!"体积"}</span></div>
+		 					<div class="data-content">{gdscbm} CBM</div>
+		 				</div>
+		    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+		 					<div class="title"><span>${LSA["stktrace.gdstype"]!"货类"}</span></div>
+		 					<div class="data-content">{gdstype}</div>
+		 				</div>
+		 			</div>
+	 			</div>
+	</script>
+	
+	<script type="text/template" id="docx">
+	<div class="image-item" onclick="xtip.photoApp('docx1', {rowindex})"><img alt="" src="{thumdata}" data-xphoto="docx1" data-xsrc="<@spring.ctx/>/edocs/download.do?docid={docid}"/></div>
+	</script>
+</body>
+</html>

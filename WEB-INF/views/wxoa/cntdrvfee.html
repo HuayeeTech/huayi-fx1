@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?v=202103.1"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+		#srhbtn {
+			border: 1px solid #73C6B6;
+			padding: 2px 8px;
+		}
+		.sub-title {
+			font-size: 0.75rem;
+			font-weight: 400;
+			padding-left: 4px;
+		}
+		.fedtbox {
+			padding-bottom: 20px;
+		}
+		.fedtbox .row {
+			padding: 6px 6px;
+		}
+		.fedtbox .form-control {
+			padding: 4px;
+			height: 28px;
+			line-height: 24px;
+		}
+		#srhcard .row {
+			padding-bottom: 3px;
+		}
+		.btn-txt {
+			border: 1px solid #A6ACAF;
+			padding: 1px 5px;
+			background: #E5E7E9;
+		}
+		#mcnts-list div.row {
+			font-size: 10px;
+		}
+		#mcnts-list div.row:nth-child(odd) {
+			background-color: #F5F5F5;
+		}
+		#mcnts-list div.row:nth-child(even) {
+			background-color: #FDF2E9;
+		}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="javascript:history.go(-1)"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["cntdrvfee.head"]!"司机报销"}</h6>
+			</div>
+			<!-- Navbar Toggler-->
+			<div class="filter-option" id="sideNavbarToggler"><i class="icofont-search"></i></div>
+		</div>
+	</div>
+	
+	<#include "/wxoa/widget/sidenav-cntdrvfee.ftl">
+    <div class="page-content-wrapper">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-8"><h6 class="sub-title">${LSA["cntdrvfee.cntsub"]!"箱号详情"}</h6></div>
+    		</div>
+    	</div>
+    	<div class="selection-panel bg-white mb-3 py-3">
+    		<div class="container" id="mst-container">
+    			<div class="row" style="display: none;">
+    				<div class="col-4">${LSA["cntdrvfee.cntno"]!"箱号"}</div>
+    				<div class="col-8 text-right">{cntno}</div>
+    			</div>
+    			<div class="row" style="display: none;">
+    				<div class="col-4">M/BL No.</div>
+    				<div class="col-8 text-right">{blnom}</div>
+    			</div>
+    			<div class="row" style="display: none;">
+    				<div class="col-4">${LSA["cntdrvfee.vevo"]!"船名航次"}</div>
+    				<div class="col-8 text-right">{vessel}&nbsp;/&nbsp;{voyage}</div>
+    			</div>
+    			<div class="row" style="display: none;">
+    				<div class="col-4">ETD</div>
+    				<div class="col-8 text-right">{etd}</div>
+    			</div>
+    			<div class="row" style="display: none;">
+    				<div class="col-4">${LSA["cntdrvfee.cmdate"]!"截关日"}</div>
+    				<div class="col-8 text-right">{cmdate}</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-8"><h6 class="sub-title">${LSA["cntdrvfee.feesub"]!"费用明细"}</h6></div>
+    			<div class="col-4 text-right">
+    				<a href="javascript:void(0)" id="dtlbtnadd" class="btn-txt">${LSA["cntdrvfee.addbtn"]!"添加"}</a>
+    			</div>
+    		</div>
+    	</div>
+    	
+    	<div class="selection-panel bg-white mb-3 py-3">
+    		<div class="container" id="gds-container">
+    			<div class="card user-data-card bg-light" style="display: none;">
+    				<div class="card-body">
+    					<div class="row">
+		    				<div class="col-6">{feename}</div>
+		    				<div class="col-6 text-right">{amt}</div>
+		    			</div>
+		 			</div>
+	 			</div>
+    		</div>
+    	</div>
+    	
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-8"><h6 class="sub-title">${LSA["cntdrvfee.edocsub"]!"附件一览"}</h6></div>
+    			<div class="col-4 text-right">
+    				<a href="javascript:void(0)" id="attrefresh" class="btn-txt">${LSA["cntdrvfee.refbtn"]!"刷新"}</a>
+    			</div>
+    		</div>
+    		<div class="selection-panel bg-white mb-3 py-3" id="img-view">
+    			
+    		</div>
+    	</div>
+    	
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-8"><h6 class="sub-title">${LSA["cntdrvfee.upsub"]!"附件上传"}</h6></div>
+    			<div class="col-4 text-right">
+    				<a href="javascript:void(0)" id="attbtnadd" class="btn-txt">${LSA["cntdrvfee.upbtn"]!"上传"}</a>
+    			</div>
+    		</div>
+    		<div class="selection-panel bg-white mb-3 py-3" id="img-list">
+    			
+    		</div>
+    	</div>
+	</div>
+	
+	<div id="fedtwin">
+	<!-- 
+		<div class="fedtbox" class="container">
+			<div class="row">
+   				<div class="col-4">费用名称</div>
+   				<div class="col-8 text-right">
+   					<select id="fedt_feeid" class="form-control">
+   						<option value="100">提箱费</option>
+   						<option value="129">装卸费</option>
+   						<option value="234">运管费</option>
+   					</select>
+   					<input type="hidden" id="fedt_arap"/>
+   				</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-4">金额</div>
+   				<div class="col-8 text-right">
+   					<input id="fedt_amt" type="text" class="form-control"/>
+   				</div>
+   			</div>
+   			<div class="row" style="padding-left: 20px; padding-right: 20px;">
+   				<button type="button" class="btn btn-primary btn-sm btn-block" id="dtlbtnok" onclick="doSubmitFee()">提交</button>
+   			</div>
+		</div>
+	 -->
+	</div>
+	
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	<script type="text/javascript">var curuid = "<#if CURRENT_USER??>${CURRENT_USER.userid}<#else>0</#if>";</script>
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript" src="<@spring.ctx/>/ress/views/wxoa/cntdrvfee.js?v=202103.1"></script>
+	
+	<script type="text/template" id="mst">
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvfee.cntno"]!"箱号"}</div>
+    				<div class="col-8 text-right">{cntno}<input type="hidden" id="jobid" value="{jobid}"/><input type="hidden" id="cntpkid" value="{cntpkid}"/></div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">M/BL No.</div>
+    				<div class="col-8 text-right">{blnom}</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvfee.vevo"]!"船名航次"}</div>
+    				<div class="col-8 text-right">{vessel}&nbsp;/&nbsp;{voyage}</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">ETD</div>
+    				<div class="col-8 text-right">{etd}</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvfee.cmdate"]!"截关日"}</div>
+    				<div class="col-8 text-right">{cmdate}</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-4">${LSA["cntdrvfee.amtsum"]!"总金额"}</div>
+    				<div class="col-8 text-right">{amtsum}</div>
+    			</div>
+	</script>
+	
+	<script type="text/template" id="gds">
+    			<div class="card user-data-card bg-light">
+    				<div class="card-body">
+    					<div class="row" data-id="{arap}" onclick="loadArapEdit(this)">
+		    				<div class="col-6">{feename}</div>
+		    				<div class="col-6 text-right">{amt}</div>
+		    			</div>
+		 			</div>
+	 			</div>
+	</script>
+	<script type="text/template" id="docx">
+	<div class="image-item" id="img-{docid}"><div class="image-close" onclick="deleteImg('{docid}')">X</div><div onclick="xtip.photoApp('docx1', {rowindex})"><img alt="" src="{thumdata}" data-xphoto="docx1" data-xsrc="<@spring.ctx/>/edocs/download.do?docid={docid}"/></div></div>
+	</script>
+	<script type="text/template" id="mcnts">
+	    			<div class="row mb-1" onclick="$('#goHomeBtn').click(); doRefresh('{cntpkid}');">
+	    				<div class="col-5">{blnom}</div>
+	    				<div class="col-4">{cntno}</div>
+						<div class="col-3 text-right">{amtsum}</div>
+	    			</div>
+	</script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+	<title>货物追踪查询 - <#if pgseo??>${pgseo.title!'华逸风行'}<#else>华逸风行</#if></title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<meta name="description" content=""/>
+	<meta name="keywords" content=""/>
+	<meta name="author" content=""/>
+	<meta name="copyright" content=""/>
+	<meta name="robots" content="all"/>
+	<meta name="visit-after" content="7 days"/>
+	<link href="${rc.contextPath}/ress/images/favicon.ico?v=202103.1" rel="shortcut icon" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/sapi/cargotrace-view.css?v=202304.6"/>
+	<style type="text/css">
+	.header {
+		height: 96px;
+	}
+	.top-space {
+		height: 20px;
+	}
+	.header .container {
+		line-height: 36px;
+	}
+	.btn {
+		background-color: #4CAF50; /* Green */
+		border: none;
+		color: white;
+		padding: 6px 16px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		margin-left: 12px;
+		font-weight: normal;
+	}
+	#footer {
+		height: 66px;
+		position: fixed;
+		bottom: 0px;
+		left: 0.5%;
+		border: 0px solid #ccc;
+		width: 99%;
+		background: #F7F7F7;
+		margin: 0 auto;
+		z-index: 999;
+	}
+	#footer .container {
+		border: 0px solid #440;
+	}
+	#copyright {
+		font-size: 0.75rem;
+		text-align: center;
+		color: #839192;
+		line-height: 36px;
+		border-top: 1px solid #ccc;
+		padding-top: 16px;
+	}
+	#copyright a, #copyright a:link, #copyright a:visited {
+		text-decoration: none;
+		color: #839192;
+	}
+	.space {
+		height: 70px;
+	}
+	input[type=text] {
+		border-radius: 12px;
+		padding-left: 12px;
+		height: 24px;
+		font-size: 12pt;
+	}
+	.formwrap {
+		width: 380px;
+		margin: 0 auto;
+	}
+	.selectbox {
+		display: inline-block;
+		width: 80px;
+		vertical-align: middle;
+		padding: 0 0 0 6px;
+		overflow: hidden;
+		background-color: #fff;
+		color: #555;
+		border: 1px solid #aaa;
+		text-shadow: none;
+		border-radius: 4px;
+		height: 28px;
+		font-size: 11pt;
+		margin-top: -6px;
+	}
+	</style>
+	<script type="text/javascript" charset="utf-8">
+	
+	</script>
+</head>
+<body>
+	<#assign qp = queryparm>
+	<div class="header">
+		<div class="container">
+			<div class="top-space"></div>
+			<div class="formwrap">
+			<form action="#" name="query" onsubmit="return validateForm();" >
+				<label for="blno"><!-- 提单号： -->
+				<select name="noxtype" id="noxtype" class="selectbox">
+                        <option value="10" <#if qp.noxtype == 10>selected="selected"</#if>>HBL No.</option>
+                        <option value="20" <#if qp.noxtype == 20>selected="selected"</#if>>箱号</option>
+                        <option value="30" <#if qp.noxtype == 30>selected="selected"</#if>>工作号</option>
+                </select>
+				<input type="text" name="blnox" id="blnox" value="${qp.blnox!''}" /></label><button type="submit" class="btn" >查询</button>
+			</form>
+			</div>
+		</div>
+	</div>
+	<#if mpk.success>
+	<div class="section">
+	<div class="container">
+		<div class="box-tip"><span>货物追踪详情</span></div>
+		<#assign datrows = mpk.obj.rows>
+		<#list datrows as datrow>
+			<#if datrow.ackresults gt 0>
+				<#list datrow.ackDataGrid.rows as mst>
+				<div class="card">
+					<div class="card-header">
+						<div class="title"><span class="box-tag">提单信息<#if datrow.ackresults gt 1>(${datrow_index + 1})</#if></span></div>
+						<div class="row">
+							<label>是否完成:</label>
+							<span class="text"><#if mst.isCompleted?? && mst.isCompleted == "Y">是<#else>否</#if></span>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<label>HB/L No.:</label>
+							<span class="text">${datrow.blnoh!''}</span>
+						</div>
+						<div class="row">
+							<label>工作号:</label>
+							<span class="text">${datrow.jobno!''}</span>
+						</div>
+						<div class="row">
+							<label>客户单号:</label>
+							<span class="text">${datrow.refno_s!''}</span>
+						</div>
+						<div class="row">
+							<label>船司:</label>
+							<span class="text">${mst.carrier!''}(${mst.carrierCode!''})</span>
+						</div>
+						<div class="row">
+							<label>船名:</label>
+							<span class="text">${mst.vessel!''}</span>
+						</div>
+						<div class="row">
+							<label>航次:</label>
+							<span class="text">${mst.voyage!''}</span>
+						</div>
+						<div class="row">
+							<label>起运地:</label>
+							<span class="text">${mst.reception!''} (${mst.receptionCode!''})</span>
+						</div>
+						<div class="row">
+							<label>起运港:</label>
+							<span class="text">${mst.pol!''} (${mst.polCode!''})</span>
+						</div>
+						<div class="row">
+							<label>目的地:</label>
+							<span class="text">${mst.destination!''} (${mst.destinationCode!''})</span>
+						</div>
+						<div class="row">
+							<label>目的港:</label>
+							<span class="text">${mst.pld!''} (${mst.pldCode!''})</span>
+						</div>
+						<div class="row">
+							<label>转运港:</label>
+							<span class="text">${mst.pot!''}(${mst.potCode!''})</span>
+						</div>
+						<div class="row">
+							<label>预计离港时间:</label>
+							<span class="text">${mst.etdPolFormat!''}</span>
+						</div>
+						<div class="row">
+							<label>预计到港时间:</label>
+							<span class="text">${mst.etaPldFormat!''}</span>
+						</div>
+						<div class="row">
+							<label>实际离港时间:</label>
+							<span class="text">${mst.atdPolFormat!''}</span>
+						</div>
+						<div class="row">
+							<label>实际到港时间:</label>
+							<span class="text">${mst.ataPldFormat!''}</span>
+						</div>
+					</div>
+				</div>
+				<!--集装箱信息 -->
+				<#list mst.containerInfoList as cntr>
+				<div class="card" <#if qp.noxtype == 20 && qp.blnox?length gt 0><#if cntr.cntno?? && qp.blnox?upper_case == cntr.cntno?upper_case>style=""<#else>style="display: none;"</#if></#if>>
+					<div class="card-header">
+						<div class="title"><span class="box-tag">集装箱动态 <#if qp.noxtype == 20 && qp.blnox?length gt 0><#else>(${cntr_index + 1})</#if></span>&nbsp;&nbsp;&nbsp;&nbsp;箱号：<b>${cntr.cntno!''}</b>&nbsp;&nbsp;箱型：${cntr.size!''}</div>
+					</div>
+					<div class="card-body">
+						<!-- 集装箱动态步骤条 -->
+						<#if cntr.statusInfoList?? && cntr.statusInfoList?size gt 0>
+						<div style="white-space: nowrap; height: 280px;  margin-top: 45px; overflow: scroll;" >
+							<div class="cntr-step">
+								<#list cntr.statusInfoList?sort_by("statusTime")?reverse as cntrStatus>
+								<div class="step-cont"> 
+									<div class="step-items">
+										<div class="status">${cntrStatus.statusDescZh!''}</div>
+									</div>
+									<div class="step-line">
+										<div class="step_row_line" <#if cntrStatus_index = 0>style="background: #fff;"</#if>></div>
+										<#if cntrStatus.isEst = "Y">
+										<span class="step_row_icon_gray"><label style="visibility: hidden;">&radic;</label></span>
+										<#else>
+										<span class="step_row_icon">&radic;</span>
+										</#if>
+										<div class="step_row_line" <#if cntrStatus_index + 1 = cntr.statusInfoList?size>style="background: #fff;"</#if>></div>
+									</div>
+									<div class="step-items">
+										<div class="status-info">
+											<div class="status-time"><#if cntrStatus.isEst = "Y">(预)</#if>${cntrStatus.statusTimeFormat!''}</div>
+											<div class="status-place" onmousemove="showTip('pd-${cntr_index}-${cntrStatus_index}')" onmouseout="closeTip('pd-${cntr_index}-${cntrStatus_index}')">
+											    ${cntrStatus.statusPlace!''}
+											</div>
+											<div>${cntrStatus.statusDesc!''}</div>
+										</div>
+									</div>
+									<div class="place-detail" id="pd-${cntr_index}-${cntrStatus_index}" style="display: none;">
+										<div><p>${cntrStatus.statusPlace!''}</p></div>
+										<div class="trangle"></div>
+									</div>
+								</div>
+								</#list><#-- end Of cntr.statusInfoList -->
+							</div>
+						</div>
+						<#else>
+						<div><p style="text-align: center; color: gray;">无动态数据</p></div>
+						</#if>
+					</div>
+				</div>
+				</#list><#-- end Of mst.cntrInfoList -->
+				<!--航段信息 -->
+				<#if mst.routingInfoList?? && mst.routingInfoList?size gt 0>
+				<#list mst.routingInfoList as routItem>
+				<div class="card" <#if qp.noxtype == 20 && qp.blnox?length gt 0><#if routItem.cntno?? && qp.blnox?upper_case == routItem.cntno?upper_case>style=""<#else>style="display: none;"</#if></#if>>
+					<div class="card-header">
+						<div class="title"><span class="box-tag">航段信息 <#if qp.noxtype == 20 && qp.blnox?length gt 0><#else>(${routItem_index + 1})</#if></span></div>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<label>箱号:</label>
+							<span class="text">${routItem.cntno!''}</span>
+						</div>
+						<div class="row">
+							<label>船名:</label>
+							<span class="text">${routItem.vessel!''}</span>
+						</div>
+						<div class="row">
+							<label>航次:</label>
+							<span class="text">${routItem.voyage!''}</span>
+						</div>
+						<div class="row">
+							<label>起运港:</label>
+							<span class="text">${routItem.loading!''} (${routItem.loadingCode!''})</span>
+						</div>
+						<div class="row">
+							<label>目的港:</label>
+							<span class="text">${routItem.discharging!''} (${routItem.dischargingCode!''})</span>
+						</div>
+						<div class="row">
+							<label>ETD:</label>
+							<span class="text">${routItem.etd!''}</span>
+						</div>
+						<div class="row">
+							<label>ETA:</label>
+							<span class="text">${routItem.eta!''}</span>
+						</div>
+						<div class="row">
+							<label>ATD:</label>
+							<span class="text">${routItem.atd!''}</span>
+						</div>
+						<div class="row">
+							<label>ATA:</label>
+							<span class="text">${routItem.ata!''}</span>
+						</div>
+					</div>
+				</div>
+				</#list><#-- end Of mst.routingInfoList -->
+				</#if>
+				</#list><#-- end Of datrow.ackDataGrid.rows -->
+			<#else>
+				<h3 class="label-err">暂无动态：${datrow.ackmsg!''}</h3>
+			</#if>
+		</#list>
+	</div>
+	<#else>
+	<div class="container">
+		<div class="box-tip"><span class="label-err"><#if qp.blnox?? && qp.blnox?length gt 0>${mpk.msg}<#else>请输入 HBL单号  、工作单号、 或箱号查询</#if></span></div>
+	</div>
+	</#if>
+	</div>
+	<div class="space">&nbsp;</div>
+	<div id="footer">
+		<div class="container">
+			<div id="copyright"><a href="http://www.huayeetech.com" target="_blank">深圳市华逸信息科技有限公司</a> 提供技术支持</div>
+		</div>
+	</div>
+	<script type="text/javascript" charset="utf-8">
+	function showTip(id) {
+		//alert(id);
+		document.getElementById(id).style.display = '';
+	}
+	function closeTip(id) {
+		//alert(id);
+		document.getElementById(id).style.display = 'none';
+	}
+	function validateForm(){
+		var blnox = document.forms["query"]["blnox"].value;
+		if (blnox == null || blnox == ""){
+			alert("请填入单号");
+			return false;
+		}
+		return true;
+	}
+	</script>
+</body>
+</html>

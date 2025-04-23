@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title>附件一览</title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="robots" content="none" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,viewport-fit=cover">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<link href="<@spring.ctx/>/ress/images/favicon.ico?t=1.0" rel="shortcut icon" type="image/x-icon"/>
+	<link rel="stylesheet" href="<@spring.ctx/>/ress/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<style type="text/css">
+		body {
+			font-family: 'Helvetica Neue',Helvetica,sans-serif;
+		    font-size: 13px;
+		    line-height: 21px;
+		    color: #000;
+		    background-color: #efeff4;
+		    -webkit-overflow-scrolling: touch;
+		}
+		#imglist {
+			margin-left: 12px;
+		}
+		.panel-title {
+			font-size: 28px;
+			padding: 18px 12px;
+		}
+		.thumbnail img {
+			width: 100px;
+			height: 100px;
+		}
+		.pic_p {
+			margin-top: 6px;
+		}
+		.imgauto {
+			width: auto;
+			height: auto;
+			max-width: 860px;
+			max-height: 680px;
+			cursor: crosshair;
+		}
+		.imgmax {
+			width: auto;
+			height: auto;
+			max-width: 2860px;
+			max-height: 1680px;
+			cursor: pointer;
+		}
+		.modal-body {
+			max-width: 880px;
+			max-height: 700px;
+		}
+		div.docwrap {
+			width: 220px;
+			margin-right: 8px;
+			margin-bottom: 8px;
+			border: 1px solid #000000;
+			text-align: center;
+			padding: 6px 6px;
+		}
+		.btnshow {
+			font-size: 12px;
+		}
+		
+	</style>
+</head>
+<body>
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h3 class="panel-title">附件一览</h3>
+		</div>
+		<div class="panel-body">
+			<div class="row" id="imglist">
+				<div class="col-xs-6 col-sm-1" style="display: none;">
+					<div class="thumbnail">
+						<img src="<@spring.ctx/>/ress/images/iconfont-empty.png" alt="通用的占位符缩略图">
+						<div class="caption" style="padding-top: 0px;padding-bottom: 0px;">
+							<p class="pic_p">一些示例文本。</p>
+							<p class="pic_p text-center">
+								<a href="#" class="btn btn-primary btn-xs" role="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;查看</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="showimgbox" tabindex="-1" role="dialog" aria-labelledby="showimgboxLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="showimgboxLabel">
+						查看
+					</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+				</div>
+				<div class="modal-body" style="overflow: auto;">
+					<img alt="" src="" id="showimg" class="carousel-inner img-responsive img-rounded center-block imgauto" onclick="zoomImg(this)" />
+					<img alt="" src="<@spring.ctx/>/ress/images/loading.gif" id="showimgload" style="display: none;" class="carousel-inner img-responsive img-rounded center-block imgauto" />
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info" onclick="prevImg()">上一个</button>
+					<button type="button" class="btn btn-info" onclick="nextImg()">下一个</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
+	
+	<script src="<@spring.ctx/>/ress/js/jquery.min.js"></script>
+	<script src="<@spring.ctx/>/ress/js/bootstrap.min.js"></script>
+	<script src="<@spring.ctx/>/ress/js/toastr.min.js"></script>
+	<script type="text/javascript">
+	var datid = "${datpkid!'0'}";
+	var docid = "${docid!'0'}";
+	var curImgId = "";
+	var imgArr = [];
+	$(function(){
+		loadList(datid, docid);
+	});
+	
+	function initShow() {
+		if (/^([1-9][0-9]*)+$/.test(docid)) {
+			$('#btn' + docid).trigger('click');
+		}
+		imgArr = new Array();
+		$("a.btnshow").each(function(){
+			var me = $(this);
+			if ('Y' == me.attr("data-isimg")) {
+				var id = me.attr("id");
+				id = id.substr(3);
+				var tt = me.attr("title");
+				imgArr.push({id: id, title: tt, isimg: 'Y'});
+			}
+		});
+	}
+	
+	function loadList(datid, docid) {
+		$.post("<@spring.ctx/>/edocs/listdat.do", 
+			{
+				datpkid: datid,
+				docid: docid
+			},
+			function(data, status) {
+				var html = "";
+				if (data.success !== true) {
+					toastr.warning("没有数据");
+					return;
+				}
+				var gd = data.obj;
+				if (gd && gd.results && gd.results > 0) {
+					for (var i = 0; i < gd.results; i = i + 1) {
+						html += "<div class=\"docwrap\">\r\n";
+						html += "	<div class=\"thumbnail\">\r\n";
+						if (gd.rows[i].isimg == 'Y') {
+							html += "		<img src=\"" + gd.rows[i].thumdata + "\" alt=\"\">\r\n";	
+						} else {
+							html += "		<img src=\"<@spring.ctx/>/ress/images/iconfont-empty.png\" alt=\"无图\">\r\n";
+						}
+						html += "		<div class=\"caption\" style=\"padding-top: 0px;padding-bottom: 0px;\">\r\n";
+						html += "			<p class=\"pic_p text-center\">" + gd.rows[i].filename + "</p>\r\n";
+						html += "			<p class=\"pic_p text-center\">\r\n";
+						html += "				<a href=\"javascript:;\" id=\"btn" + gd.rows[i].docid + "\" title=\"" + gd.rows[i].filename + "\" data-isimg=\"" + gd.rows[i].isimg + "\" onclick=\"loadDtl('" + gd.rows[i].docid + "','" + gd.rows[i].isimg + "')\" class=\"btn btn-primary btn-xs btnshow\" role=\"button\"><span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\"></span>&nbsp;查看</a>\r\n";
+						html += "			</p>\r\n";
+						html += "			</div>\r\n";
+						html += "		</div>\r\n";
+						html += "</div>\r\n";
+					}
+				} else {
+					html += "<div class=\"col-xs-6\">\r\n";
+					html += "	<div class=\"thumbnail\">\r\n";
+					html += "		<img src=\"<@spring.ctx/>/ress/images/iconfont-tianjia.png\" alt=\"无图\">\r\n";
+					html += "		<div class=\"caption\" style=\"padding-top: 0px;padding-bottom: 0px;\">\r\n";
+					html += "			<p class=\"pic_p text-center\">没有附件</p>\r\n";
+					html += "			<p class=\"pic_p text-center\">\r\n";
+					//html += "				<a href=\"#\" class=\"btn btn-primary btn-xs\" role=\"button\"><span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\"></span>&nbsp;查看</a>\r\n";
+					html += "			</p>\r\n";
+					html += "			</div>\r\n";
+					html += "		</div>\r\n";
+					html += "</div>\r\n";
+				}
+				$('#imglist').html(html);
+				
+				initShow();
+			}
+		);
+	}
+	
+	function loadDtl(id, isimg) {
+		var url = "<@spring.ctx/>/edocs/download.do?docid=" + id;
+		var imgobj = document.getElementById("showimg");
+		imgobj.src = "";
+		if (isimg == 'Y') {
+			curImgId = id;
+			imgobj.src = url;
+			$(imgobj).css("display", "none");
+			$("#showimgload").css("display", "");
+			imgobj.onload = function() {
+				$(imgobj).css("display", "");
+				$("#showimgload").css("display", "none");
+			}
+			var options = {};
+			$('#showimgbox').modal(options);
+		} else {
+			window.open(url);
+		}
+	}
+	
+	function prevImg() {
+		var index = -1;
+		for (var i = 0; i < imgArr.length; i ++) {
+			if (imgArr[i].id == curImgId) {
+				index = i - 1;
+				break;
+			}
+		}
+		if (index >= 0 && index < imgArr.length) {
+			loadDtl(imgArr[index].id, imgArr[index].isimg);
+		} else {
+			toastr.info("已是第一张");
+		}
+	}
+	
+	function nextImg() {
+		var index = -1;
+		for (var i = 0; i < imgArr.length; i ++) {
+			if (imgArr[i].id == curImgId) {
+				index = i + 1;
+				break;
+			}
+		}
+		if (index >= 0 && index < imgArr.length) {
+			loadDtl(imgArr[index].id, imgArr[index].isimg);
+		} else {
+			toastr.info("已是最后张");
+		}
+	}
+	
+	function zoomImg(obj) {
+		if ($(obj).hasClass('imgauto')) {
+			$(obj).removeClass('imgauto');
+			$(obj).addClass('imgmax');
+		} else {
+			$(obj).addClass('imgauto');
+			$(obj).removeClass('imgmax');
+		}
+	}
+	</script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?22"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+		#tb1 {
+			min-width: 1120px;
+		}
+		#table-wrapper {
+			padding-left: 3px;
+			padding-right: 3px;
+		}
+		.filter-option {
+			margin-left: 8px;
+		}
+		#btn-downxls i {
+			color: #1E8449;
+		}
+		#tb1 td {
+			font-size: 11px;
+		}
+		#tb1 td.recv {
+			text-decoration: underline;
+			color: #5DADE2;
+		}
+		#recv-container .input-group-append .input-group-btn {
+			padding: 5px 8px;
+		}
+		#recv-container .form-group {
+			margin-bottom: 6px;
+		}
+		#recv-container .form-group label {
+			margin-bottom: 2px;
+		}
+		#recv-container input.form-control {
+			height: 28px;
+			padding-left: 6px;
+		}
+		#recv-container textarea.form-control {
+			padding: 3px 6px;
+		}
+		#recv-container div.card-header {
+			padding-top: 0.15rem;
+			padding-bottom: 0.15rem;
+			padding-left: 0.25rem;
+			padding-right: 0.55rem;
+		}
+		#recv-container .btn:hover {
+			color: #000000;
+		}
+		#recv-container div.hd-title {
+			padding: 6px 6px 6px 0px;
+		}
+		#recv-container .hd-btn {
+			position: absolute;
+			top: 5px;
+			right: 12px;
+		}
+		#recv-container .btn-default {
+			padding-right: 6px;
+			padding-left: 8px;
+		}
+		#recv-container .status-point {
+			display: inline-block;
+			width: 6px;
+			height: 6px;
+			border-radius: 50%;
+		}
+		#recv-container .red {
+			background-color: #F44336;
+		}
+		#recv-container .green {
+			background-color: #43A047;
+		}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="<@spring.ctx/>/wxoa/index.action"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["stkquery2.head"]!"目的港库存"}</h6>
+			</div>
+			<div>
+			<div class="filter-option float-left" id="btn-downxls"><i class="icofont-download"></i></div>
+			<!-- Filter Option-->
+			<div class="filter-option float-right" id="sideNavbarToggler"><i class="icofont-search"></i></div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Sidenav Black Overlay-->
+	<div class="sidenav-black-overlay"></div>
+	<!-- Side Nav Wrapper-->
+	<div class="suha-sidenav-wrapper filter-nav" id="sidenavWrapper">
+		<!-- Catagory Sidebar Area-->
+		<div class="catagory-sidebar-area">
+			<!-- Catagory-->
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkquery2.istno"]!"入库单号(原)"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_istono"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkquery2.iclicode"]!"客户代码(原)"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_iclicode"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkquery2.icliextcode"]!"客户辅助编码(原)"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_icliextcode"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkquery2.icliabbr"]!"客户简称(原)"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_icliabbr"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkquery2.isales"]!"业务员(原)"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_isales"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkquery2.stono"]!"入库单号"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_stono"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-3">
+				<h6 class="widget-title mb-0">${LSA["stkquery2.depot"]!"仓库"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_depot"/>
+					</div>
+				</div>
+			</div>
+			<!-- Apply Filter-->
+			<div class="apply-filter-btn"><a class="btn btn-success" href="javascript:void(0)" id="btn-search">${LSA["stkquery2.searchbtn"]!"搜索"}</a></div>
+		</div>
+	</div>
+
+    <div class="page-content-wrapper">
+    	<div class="container-fluid">
+			<div class="row" id="table-wrapper">
+				<div class="table-responsive-sm">
+					<table id="tb1" class="table table-bordered table-striped table-light table-sm" data-striped="true">
+						<thead>
+							<tr>
+								<th>${LSA["stkquery2.icustomno"]!"入仓号"}</th>
+								<th>${LSA["stkquery2.stono"]!"入库单号"}</th>
+								<th class="text-center">${LSA["stkquery2.actdate"]!"入仓时间"}</th>
+								<th class="text-center">${LSA["stkquery2.stkstatus"]!"库存状态"}</th>
+								<th class="text-right">${LSA["stkquery2.stkpieces"]!"库存件数"}</th>
+								<th>${LSA["stkquery2.gdsname"]!"货物名称"}</th>
+								<th>${LSA["stkquery2.gdstype"]!"货类"}</th>
+								<th class="text-right">${LSA["stkquery2.gdscbm"]!"体积"}<span style="font-size: 0.45rem">(CBM)</span></th>
+								<th class="text-right">${LSA["stkquery2.grswgt"]!"毛重"}<span style="font-size: 0.45rem">(KGS)</span></th>
+								<th>${LSA["stkquery2.depot"]!"仓库"}</th>
+								<th>${LSA["stkquery2.gdsnameen"]!"货物名称(英文)"}</th>
+								<th>${LSA["stkquery2.receiver"]!"收货人"}</th>
+							</tr>
+						</thead>
+						<tbody id="datrows-container">
+							<tr style="display: none;">
+								<td>{icustomno}&nbsp;</td>
+								<td class="text-center">{istoactdatedesc}&nbsp;</td>
+								<td class="text-center">{stkstatusdesc}&nbsp;</td>
+								<td class="text-right">{pieces_stk}&nbsp;</td>
+								<td>{istono}&nbsp;</td>
+								<td>{goodsname_c}&nbsp;</td>
+								<td>{gdstype}&nbsp;</td>
+								<td class="text-right">{gdscbm_stk}&nbsp;</td>
+								<td class="text-right">{grswgt_stk}&nbsp;</td>
+								<td>{depotname_c}&nbsp;</td>
+								<td>{stk_receiver}&nbsp;</td>
+							</tr>
+							<tr><td colspan="11"><div class="icon-loading">Loading......</div></td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-12" style="display: none;">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="icon-loading">Loading......</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row" style="margin-top: 12px;">
+				<div class="col-12 text-center"><button type="button" class="btn btn-info" id="btn-loadmore">${LSA["stkquery2.loadmore"]!"加载更多"}...</button></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="extModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">${LSA["stkquery2.ext"]!"导出"}</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<h6 class="small mb-3">${LSA["stkquery2.exttips"]!"请将以下网址粘贴到浏览器地址栏下载文件"}</h6>
+					<div><input type="text" id="ext-url" style="width: 100%" class="form-control" readonly="readonly"/></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="recvModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">${LSA["stkquery2.recv"]!"收货人编辑"}</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<div id="recv-container">
+						<form action="#" onsubmit="return false;" id="recvform">
+							<div class="form-group">
+								<label for="receiver">${LSA["stkquery2.receiver"]!"收货人"}</label>
+								<div class="input-group mb-3 input-group-sm">
+									<input type="hidden" name="datapk" value=""/>
+									<input type="text" name="receiver" class="form-control" value=""/>
+									<div class="input-group-append"><span class="input-group-btn" onclick="showRecvList('')"><i class="icofont-list">&nbsp;</i></span></div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="rectelno">${LSA["stkquery2.rectelno"]!"收货电话"}</label>
+								<input type="text" name="rectelno" class="form-control" value=""/>
+									<input type="hidden" name="sodtlid" value=""/>
+									<input type="hidden" name="sidtlid" value=""/>
+							</div>
+							<div class="form-group">
+								<label for="recaddr">${LSA["stkquery2.recaddr"]!"收货地址"}</label>
+								<input type="text" name="recaddr" class="form-control" value=""/>
+							</div>
+							<div class="form-group">
+								<label for="reccity">${LSA["stkquery2.reccity"]!"收货城市"}</label>
+								<input type="text" name="reccity" class="form-control" value="{reccity}"/>
+							</div>
+							<div class="form-group">
+								<label for="recpostcode">${LSA["stkquery2.recpostcode"]!"收货邮编"}</label>
+								<input type="text" name="recpostcode" class="form-control" value=""/>
+							</div>
+							<div class="form-group">
+								<label for="recdtbnotice">${LSA["stkquery2.recdtbnotice"]!"派送注意事项"}</label>
+								<textarea name="recdtbnotice" class="form-control" value=""></textarea>
+							</div>
+						</form>
+					</div>
+				</div><!-- end of modal-body -->
+		    	<div class="modal-footer" style="padding-top: 6px; padding-bottom: 4px;">
+		    		<button type="button" class="btn btn-primary btn-sm" id="recvcommit">${LSA["stkquery2.recvcommit"]!"提交更改"}</button>
+		    	</div>
+			</div>
+		</div>
+	</div>
+	<div style="display: none">
+		<div id="reclist" style=" overflow-y:auto">
+			<div class="pre-scrollable">
+				<ul>
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	
+	<#include "/xtpl/wxoa-all-js.ftl">
+	
+	<script type="text/javascript">
+	var curRecvers = [];
+	var curRecvPk = 0;
+	var curpkid = 0;
+	var curRecvCell = null;
+	var loading = 0;
+	$(function(){
+		var curPage = 1,
+		    curLimit = 20;
+		var loading = 0;
+		var doRefresh = function(isClear) {
+			var data = {
+					"istono": $("#srh_istono").val(),
+					"iclicode": $("#srh_iclicode").val(),
+					"icliextcode": $("#srh_icliextcode").val(),
+					"icliabbr": $("#srh_icliabbr").val(),
+					"isales": $("#srh_isales").val(),
+					"stono": $("#srh_stono").val(),
+					"depot": $("#srh_depot").val(),
+					"page": curPage,
+					"limit": curLimit
+				};
+			HyUtils.post("/wxoa/stkpodqrydat.do", data, function (datobj) {
+				if (isClear === true) clearList();
+				var gd = datobj;
+				if (gd && gd.rows && gd.rows.length > 0) {
+					var tpl = $('script[type="text/template"][id="h-list"]').html();
+					var arr = [];
+					$.each(gd.rows, function(i, o) {
+						o.stk_receiver = (HyUtils.isEmpty(o.stk_receiver) ? "(未录入)" : o.stk_receiver);
+						o.depot = (o.orgid == 1009) ? o.depotcode : o.depotname_c;
+						arr.push(HyUtils.formatTemplate(o, tpl));
+					});
+					$('#datrows-container').append(arr.join(''));
+					bindRecvClick();
+				} else {
+					toastr.info('没有更多数据了^_^');
+				}
+			});
+		};
+		var clearList = function(){
+			$('#datrows-container').empty();
+		};
+		var addLoading = function(){
+			var ht = '<div class="col-12"><div class="card mediaview-card mb-3"><div class="card-body d-flex align-items-center"><div class="icon-loading">Loading......</div></div></div></div>';
+			ht = '<tr><td colspan="9"><div class="icon-loading">Loading......</div></td></tr>'
+			$('#datrows-container').empty();
+			$('#datrows-container').append(ht);
+		};
+		
+		doRefresh(true);
+		
+		$('#btn-search').click(function(event){
+			curPage = 1;
+			addLoading();
+			doRefresh(true);
+		});
+		$('#btn-loadmore').click(function(){
+			curPage ++;
+			doRefresh();
+		});
+		$('#btn-downxls').click(function(event){
+			var data = {
+				"page": 0,
+				"limit": 0
+			};
+			
+			HyUtils.post("/wxoa/stkpodqrydatxls.do", data, function (datobj) {
+				$('#ext-url').val(datobj);
+				$('#extModal').modal('show');
+			});
+			
+		});
+		$('#recvcommit').click(function(evnet){
+			doSubmitReceiver();
+		});
+	});
+	function bindRecvClick() {
+		$(".recv").off('click');
+		$(".recv").click(function(event){
+			var tagfix = this.id.substr(0,4);
+			if (tagfix == "edt-") {
+				curRecvCell = this;
+				var datapk = this.id.substr(4,this.id.length);
+				open_edit(datapk);	
+			}
+		});
+	}
+	
+	function open_edit(datapk) {
+		var parms = {};
+		var isout = 1;
+		if (HyUtils.isEmpty(datapk)) {
+			toastr.info('参数无效');
+			return;
+		}
+		
+		if (datapk.substr(0,1) == "Y") {
+			datapk = datapk.substr(1, datapk.length - 1);
+			parms = {"pkid": datapk};
+		} else {
+			if (HyUtils.isNumber(datapk)) {
+				parms = {"pkid": datapk};
+			} else {
+				datapk = datapk.substr(1, datapk.length - 1);
+				parms = {"sidtlid": datapk};
+				isout = 0;
+			}
+		}
+
+		HyUtils.post("/wxoa/ostkrecvdat.do", parms, function (datobj) {
+			var rowdata = datobj || {};
+			$('#recvModal').modal('show');
+			HyUtils.fillForm('recvform', rowdata);
+		});
+	}
+	
+	function doSubmitReceiver() {
+		if (loading == 1) {
+			toastr.info('等待服务器反馈，请稍候。');
+			return;
+		}
+		
+		var data = $('#recvform').serializeObject();
+		toastr.info('正在处理，请稍候...');
+		loading = 1;
+		HyUtils.post("/wxoa/ostkupdrecv.do", data, function (datobj) {
+			loading = 0;
+			if (!HyUtils.isEmpty(curRecvCell)) {
+				curRecvCell.innerHTML = data.receiver;
+			}
+			toastr.success('操作成功');
+		}, function(datret) {
+			loading = 0;
+			toastr.error(datret.msg);
+		});
+	}
+	
+	function showRecvList(pkid, clientid) {
+		if (loading == 1) {
+			toastr.info('等待服务器反馈，请稍候。');
+			return;
+		}
+		if (curRecvers && curRecvers.length > 0) {
+			renderRecvList();
+			return;
+		}
+		curRecvPk = pkid;
+		loading = 1;
+		HyUtils.post("/wxoa/ostkrevclst.do", {"clientid": clientid}, function (datobj) {
+			loading = 0;
+			if (!HyUtils.isEmpty(datobj)) {
+				curRecvers = datobj.rows;
+			}
+			renderRecvList();
+		});
+	}
+	function preloadRecvList(clientid) {
+		HyUtils.post("/wxoa/ostkrevclst.do", {"clientid": clientid}, function (datobj) {
+			if (!HyUtils.isEmpty(datobj)) {
+				curRecvers = datobj.rows;
+			}
+		});
+	}
+	function renderRecvList() {
+		var rows = curRecvers;
+		var rhtm = "";
+		$('#reclist').children('div').children('ul').empty();
+		for (var i = 0; i < rows.length; i = i + 1) {
+			rhtm += '<li onclick="selectRecv(' + i + ')">' + rows[i].receiver + '</li>';
+		}
+		$('#reclist').children('div').children('ul').append(rhtm);
+		
+		xtip.open({
+			type: 'ready',
+			content: '#reclist',
+			title: '选择收货人',
+			app: true
+		});
+	}
+	function selectRecv(index) {
+		var rows = curRecvers;
+		if (rows && rows.length > index && index >= 0) {
+			var row = rows[index];
+			HyUtils.fillForm('recvform', row);
+		}
+		xtip.closeAll();
+	}
+	</script>
+	<script type="text/template" id="h-list">
+							<tr>
+								<td>{icustomno}&nbsp;</td>
+								<td>{istono}&nbsp;</td>
+								<td class="text-center">{istoactdatedesc}&nbsp;</td>
+								<td class="text-center">{stkstatusdesc}&nbsp;</td>
+								<td class="text-right">{pieces_stk}&nbsp;</td>
+								<td>{goodsname_c}&nbsp;</td>
+								<td>{gdstype}&nbsp;</td>
+								<td class="text-right">{gdscbm_stk}&nbsp;</td>
+								<td class="text-right">{grswgt_stk}&nbsp;</td>
+								<td>{depot}&nbsp;</td>
+								<td>{goodsname_e}&nbsp;</td>
+								<td class="recv" id="edt-{stk_receiver_isout}{stk_receiver_pkid}">{stk_receiver}&nbsp;</td>
+							</tr>
+	</script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+    <title>货物追踪查询 - <#if pgseo??>${pgseo.title!'华逸风行'}<#else>华逸风行</#if></title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<meta name="description" content=""/>
+	<meta name="keywords" content=""/>
+	<meta name="author" content=""/>
+	<meta name="copyright" content=""/>
+	<meta name="robots" content="all"/>
+	<meta name="visit-after" content="7 days"/>
+	<link href="${rc.contextPath}/ress/images/favicon.ico?v=202103.1" rel="shortcut icon" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/sapi/cargotrace-view.css?v=202304.6"/>
+</head>
+<style type="text/css">
+   .header {
+		height: 96px;
+	}
+	.top-space {
+		height: 20px;
+	}
+	.header .container {
+		line-height: 36px;
+	}
+	.btn {
+		background-color: #4CAF50; /* Green */
+		border: none;
+		border-radius :10px;
+		color: white;
+		padding: 6px 16px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		margin-left: 12px;
+		font-weight: normal;
+	}
+	.space {
+		height: 10px;
+	}
+	input[type=text] {
+		border-radius: 10px;
+		padding-left: 12px;
+		height: 24px;
+		font-size: 12pt;
+	}
+	.query-form{
+	    display: flex;
+	    align-items:center;
+	    justify-content:space-around;
+	}
+	.formwrap {
+		width: 450px;
+		margin: 0 auto;
+	}
+	.selectbox {
+		display: inline-block;
+		width: 80px;
+		vertical-align: middle;
+		padding: 0 0 0 6px;
+		overflow: hidden;
+		background-color: #fff;
+		color: #555;
+		border: 1px solid #aaa;
+		text-shadow: none;
+		border-radius: 4px;
+		height: 28px;
+		font-size: 11pt;
+		
+	}
+</style>
+<body>
+    <#assign emb = queryparm>
+	<div class="header">
+		<div class="container">
+			<div class="top-space"></div>
+			<div class="formwrap">
+			<form action="#" name="query" onsubmit="return validateForm();" class="query-form">
+				<label for="blno"><!-- 提单号： -->
+				<select name="noxtype" id="noxtype" class="selectbox">
+				      <option value="1" <#if emb.noxtype == 1>selected="selected"</#if>>MBL No.</option>
+                      <option value="10" <#if emb.noxtype == 10>selected="selected"</#if>>HBL No.</option>
+                      <option value="20" <#if emb.noxtype == 20>selected="selected"</#if>>箱号</option>
+                      <option value="30" <#if emb.noxtype == 30>selected="selected"</#if>>工作号</option> 
+                </select>
+				<input type="text" name="blnox" id="blnox" value="${emb.blnox!''}" /></label><button type="submit" class="btn" >查询</button>
+			</form>
+			</div>
+		</div>
+	</div>
+	<div class="space">&nbsp;</div>
+	<div class="container">
+		<div class="box-tip"><span class="label-err">请输入 HBL单号  、工作单号、 或箱号查询</span></div>
+	</div>
+</body>
+
+<#include "/xtpl/extlibs.ftl">
+
+<script type="text/javascript" charset="utf-8">
+       function validateForm(){
+	      var blnox = document.forms["query"]["blnox"].value;
+	      var notype = document.forms["query"]["noxtype"].value;
+	      if (blnox == null || blnox == ""){
+		      alert("请填入单号");
+		      return false;
+	      }
+	      var url = ctx + '/sapi/cargotrace/query.do?'+'noxtype='+ notype +'&blnox='+ blnox;
+	      window.open(url);
+       }
+</script>
+</html>

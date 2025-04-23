@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?19"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="<@spring.ctx/>/wxoa/index.action"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["wxlogin.head"]!"绑定微信登录"}</h6>
+			</div>
+			<!-- Filter Option-->
+			<div class="filter-option" id="sideNavbarToggler" style="visibility: hidden;"><i class="icofont-search"></i></div>
+		</div>
+	</div>
+    
+    <div class="page-content-wrapper">
+    	<div class="selection-panel bg-white mb-3 py-3">
+    		<div class="container d-flex align-items-center justify-content-between">
+				<#if wxurl?? && wxurl != "" >
+					<h6>Loading......</h6>
+				<#else>
+				<form class="form-horizontal" role="form" onsubmit="return false;" id="loginModal">
+					<div class="form-group">
+						<label for="lgw-utype" class="control-label">${LSA["wxlogin.utypelab"]!"类别"}</label>
+						<div class="">
+							<label class="radio-inline"><input type="radio" name="utype" id="utype1" value="1"> ${LSA["wxlogin.utypeu"]!"员工"}</label>
+							<label class="radio-inline"><input type="radio" name="utype" id="utype2" value="2" checked="checked"> ${LSA["wxlogin.utypew"]!"会员"}</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="lgw-wxname" class="control-label">${LSA["wxlogin.wxidlab"]!"微信ID"}</label>
+						<div class="">
+							<input type="hidden" class="form-control" id="lgw-wxcode" placeholder="" value="<#if WXUSRINFO??>${WXUSRINFO.openid!''}</#if>">
+							<input type="text" readonly="readonly" class="form-control" id="lgw-wxname" placeholder="" value="<#if WXUSRINFO??>${WXUSRINFO.nickname!''}</#if>">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="lgw-uid" class="control-label">${LSA["wxlogin.uid"]!"账号"}</label>
+						<div class="">
+							<input type="text" class="form-control" id="lgw-uid" placeholder="请输您的入账号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="lgw-psw" class="control-label">${LSA["wxlogin.psw"]!"密码"}</label>
+						<div class="">
+							<input type="password" class="form-control" id="lgw-psw" placeholder="请输入您的密码">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="">
+							<button id="lgwSubmitBtn" type="button" class="btn btn-default btn-block btn-success">${LSA["wxlogin.btn"]!"确定"}</button>
+						</div>
+					</div>
+				</form>
+				</#if>
+    		</div>
+    	</div>
+	</div>
+	
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript">
+	$(function(){
+		var wxurl = "${wxurl!''}";
+		if (!HyUtils.isEmpty(wxurl)) {
+			window.location.href = wxurl;
+		}
+		
+	    $('#lgwSubmitBtn').click(function(){
+	    	var uid = $('#lgw-uid').val();
+	    	var psw = $('#lgw-psw').val();
+			var utype = ($("#utype1")[0].checked === true ? $("#utype1")[0].value : ($("#utype2")[0].checked === true ? $("#utype2")[0].value : ''));
+			var wxuid = $("#lgw-wxcode").val();
+			var wxuname = $("#lgw-wxname").val();
+			var data = {
+				uid: uid,
+				psw: psw,
+				wxuserid: wxuid,
+				wxusername: wxuname,
+				utype: utype
+			};
+			
+			HyUtils.post("/wxmsg/bind.do", data, function (datobj) {
+				if(HyUtils.isEmpty(datobj)) {
+					toastr.error('登录异常，请重试！');
+				} else {
+					toastr.info('登录成功！');
+					setTimeout(function(){
+						window.location.href = '<@spring.ctx/>/wxoa/index.action';
+					}, 1200);
+				}
+			});
+	    });
+	});
+	</script>
+</body>
+</html>

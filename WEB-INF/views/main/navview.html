@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>二级模块导航视图</title>
+	<#include "/xtpl/extlibs.ftl">
+</head>
+<body>
+<div class="mdlpadwrap">
+	<#list modules as m>
+	<div class="mdlpad">
+		<div class="imgpad pad-${m.imgname}" onclick="HY.openInMain('${nidprefix}${m.mdlid}', '${m.mdlname}', '${m.url}', {iconCls: '${clsprefix}${m.imgname}'})">&nbsp;</div>
+		<div style="text-align: center;"><a href="javascript:HY.openInMain('${nidprefix}${m.mdlid}', '${m.mdlname}', '${m.url}', {iconCls: '${clsprefix}${m.imgname}'})">${m.mdlname}</a></div>
+	</div>
+	</#list>
+	<p style="clear: both;">&nbsp;</p>
+</div>
+</body>
+</html>

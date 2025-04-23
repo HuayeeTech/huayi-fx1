@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?21"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+		#gds-container .input-group-append .input-group-btn {
+			padding: 5px 8px;
+		}
+		#gds-container .form-group {
+			margin-bottom: 6px;
+		}
+		#gds-container .form-group label {
+			margin-bottom: 2px;
+		}
+		#gds-container input.form-control {
+			height: 28px;
+			padding-left: 6px;
+		}
+		#gds-container textarea.form-control {
+			padding: 3px 6px;
+		}
+		#gds-container div.card-header {
+			padding-top: 0.15rem;
+			padding-bottom: 0.15rem;
+			padding-left: 0.25rem;
+			padding-right: 0.55rem;
+		}
+		#gds-container .btn:hover {
+			color: #000000;
+		}
+		#gds-container div.hd-title {
+			padding: 6px 6px 6px 0px;
+		}
+		#gds-container .hd-btn {
+			position: absolute;
+			top: 5px;
+			right: 12px;
+		}
+		#gds-container .btn-default {
+			padding-right: 6px;
+			padding-left: 8px;
+		}
+		#gds-container .status-point {
+			display: inline-block;
+			width: 6px;
+			height: 6px;
+			border-radius: 50%;
+		}
+		#gds-container .red {
+			background-color: #F44336;
+		}
+		#gds-container .green {
+			background-color: #43A047;
+		}
+		#reclist {
+			padding-left: 0.25rem;
+			height: 15rem;
+		}
+		#reclist ul > li {
+			line-height: 1.25rem;
+			padding-bottom: 0.35rem;
+		}
+		
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="<@spring.ctx/>/wxoa/index.action"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["stkcntld.head"]!"装柜货物"}</h6>
+			</div>
+			<!-- Filter Option-->
+			<div class="filter-option" id="sideNavbarToggler"><i class="icofont-search"></i></div>
+		</div>
+	</div>
+	
+	<!-- Sidenav Black Overlay-->
+	<div class="sidenav-black-overlay"></div>
+	<!-- Side Nav Wrapper-->
+	<div class="suha-sidenav-wrapper filter-nav" id="sidenavWrapper">
+		<!-- Catagory Sidebar Area-->
+		<div class="catagory-sidebar-area">
+			<!-- Catagory-->
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkcntld.ostono"]!"出库单号"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_ostono"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkcntld.sales"]!"业务员"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_sales"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-3">
+				<h6 class="widget-title mb-0">${LSA["stkcntld.istono"]!"入库单号"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_istono"/>
+					</div>
+				</div>
+			</div>
+			<!-- Apply Filter-->
+			<div class="apply-filter-btn"><a class="btn btn-success" href="javascript:void(0)" id="btn-search">${LSA["stkcntld.searchbtn"]!"搜索"}</a></div>
+		</div>
+	</div>
+    
+    <div class="page-content-wrapper">
+    	<div class="container-fluid">
+			<div class="row" id="datrows-container">
+				<div class="col-12" style="display: none;">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="media-left media-middle media-bottom">
+								<img src="<@spring.ctx/>/ress/images/core-img/lightbulb_gray.png" width="48" alt="">
+							</div>
+							<div class="media-body">
+								<div class="sub-item">
+									<em class="sub-title">${LSA["stkcntld.unistono"]!"入库单号（未结算）"}</em><div class="data-content text-right">&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.vevo"]!"船名航次"}：</em><div class="data-content text-right">{vessel} / {voyage}</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.istocode"]!"入仓号"}：</em><div class="data-content text-right">DJKS-CKL-AKSJ</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.date"]!"日期"}：</em><div class="data-content text-right">2020-11-01</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.pieces"]!"件数"}：</em><div class="data-content text-right">100</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.grswgt"]!"毛重"}：</em><div class="data-content text-right">100.124 KGS</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.gdscbm"]!"体积"}：</em><div class="data-content text-right">100.299 CBM</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.remarks"]!"备注"}：</em><div class="data-content text-right">江南好，风景旧曾谙。日出江花红胜火，春来江水绿如蓝。能不忆江南？</div>
+								</div>
+								<div class="sub-item">
+									<em></em><div class="data-content text-right"><a class="btn btn-success btn-sm" href="<@spring.ctx/>/wxoa/istkview.do"><i class="mr-1 icofont-page"></i>${LSA["stkcntld.desc"]!"详情"}</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12" style="display: ;">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="icon-loading">Loading......</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12 text-center"><button type="button" class="btn btn-info" id="btn-loadmore">${LSA["stkcntld.loadbtn"]!"加载更多"}...</button></div>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+	
+	<div class="modal fade" id="dtlModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">${LSA["stkcntld.desc"]!"详情"}</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+			    	<div id="mst-container">
+		    			<div class="icon-loading">Loading......</div>
+		    		</div>
+		    		<hr/>
+		    		
+					<div id="gds-container">
+						<div class="icon-loading">Loading......</div>
+    					<div class="card">
+							<div class="card-header form-inline">
+								<a class="card-link" data-toggle="collapse" href="#collapse1"><div class="hd-title"><div class="status-point"></div>&nbsp;${LSA["stkcntld.ostono"]!"出库单号"}：{stono_out}</div></a>
+								<button class="hd-btn btn btn-default" onclick="doSubmitReceiver('{sodtlid}')" style="{allowoptdsp}"><i class="icofont-save">&nbsp;</i></button>
+							</div>
+							<div id="collapse1" class="collapse" data-parent="#gds-container">
+								<div class="card-body">
+									<form action="#" onsubmit="return false;" id="form{sodtlid}">
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.istocode"]!"入仓号"}：</label>
+											<span>{salescode_in}-{podcode_in}-{jobcliextcode_in}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.gdsname"]!"货物名称"}：</label>
+											<span>{goodsname_c}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.gdsnameen"]!"货物英文"}：</label>
+											<span>{goodsname}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.gdstype"]!"货类"}：</label>
+											<span>{gdstype_in}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.receiver"]!"件数"}：</label>
+											<span>{pieces}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.grswgt"]!"毛重"}：</label>
+											<span>{grswgt}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.gdscbm"]!"体积"}：</label>
+											<span>{gdscbm}</span>
+										</div>
+										<div class="form-group">
+											<label for="receiver-{sodtlid}">${LSA["stkcntld.receiver"]!"收货人"}</label>
+											<div class="input-group mb-3 input-group-sm">
+												<input type="hidden" name="sodtlid" value="{sodtlid}"/>
+												<input type="text" name="receiver" id="receiver-{sodtlid}" class="form-control" value="{receiver}"/>
+												<div class="input-group-append"><span class="input-group-btn" onclick="showReclist('')"><i class="icofont-list">&nbsp;</i></span></div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="rectelno-{sodtlid}">${LSA["stkcntld.rectelno"]!"收货电话"}</label>
+											<input type="text" name="rectelno" id="rectelno-{sodtlid}" class="form-control" value="{rectelno}"/>
+										</div>
+										<div class="form-group">
+											<label for="recaddr-{sodtlid}">${LSA["stkcntld.recaddr"]!"收货地址"}</label>
+											<input type="text" name="recaddr" id="recaddr-{sodtlid}" class="form-control" value="{recaddr}"/>
+										</div>
+										<div class="form-group">
+											<label for="reccity-{sodtlid}">${LSA["stkcntld.reccity"]!"收货城市"}</label>
+											<input type="text" name="reccity" id="reccity-{sodtlid}" class="form-control" value="{reccity}"/>
+										</div>
+										<div class="form-group">
+											<label for="recpostcode-{sodtlid}">${LSA["stkcntld.recpostcode"]!"收货邮编"}</label>
+											<input type="text" name="recpostcode" id="recpostcode-{sodtlid}" class="form-control" value="{recpostcode}"/>
+										</div>
+										<div class="form-group">
+											<label for="recdtbnotice-{sodtlid}">${LSA["stkcntld.recdtbnotice"]!"派送注意事项"}</label>
+											<textarea name="recdtbnotice" id="recdtbnotice-{sodtlid}" class="form-control" value="{recdtbnotice}"></textarea>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		    		
+				</div><!-- end of modal-body -->
+			</div>
+		</div>
+	</div>
+	<div style="display: none">
+		<div id="reclist" style=" overflow-y:auto">
+			<div class="pre-scrollable">
+				<ul>
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	
+	<#include "/xtpl/wxoa-all-js.ftl">
+	<script type="text/javascript">
+	var curRecvers = [];
+	var curRecvPk = 0;
+	var loading = 0;
+	$(function(){
+		//$('#dtlModal').modal('show');
+		var curPage = 1,
+		    curLimit = 20;
+		var doRefresh = function(isClear) {
+			var data = {
+					"ostono": $("#srh_ostono").val(),
+					"istono": $("#srh_istono").val(),
+					"sales": $("#srh_sales").val(),
+					"page": curPage,
+					"limit": curLimit
+				};
+			HyUtils.post("/wxoa/stkcntlddat.do", data, function (datobj) {
+				if (isClear === true) clearList();
+				var gd = datobj;
+				if (gd && gd.rows && gd.rows.length > 0) {
+					var tpl = $('script[type="text/template"][id="list"]').html();
+					var arr = [];
+					$.each(gd.rows, function(i, o) {
+						var ypos = o.stk_receiver_status.indexOf('Y');
+						var npos = o.stk_receiver_status.indexOf('N');
+						o.stkrecsta = (npos == -1 && ypos > -1) ? 'Y' : ((npos > -1 && ypos > -1) ? 'P' : 'N');
+						o.stkrecstadesc = (o.stkrecsta == 'Y') ? '已提交完成' : ((o.stkrecsta == 'P') ? '部分提交' : '未提交');
+						o.imgname = (o.stkrecsta == 'Y') ? 'lightbulb_gray.png' : 'lightbulb_yellow.png';
+						arr.push(HyUtils.formatTemplate(o, tpl));
+					});
+					$('#datrows-container').append(arr.join(''));
+				} else {
+					toastr.info('没有更多数据了^_^');
+				}
+			});
+		};
+		var clearList = function(){
+			$('#datrows-container').empty();
+		};
+		var addLoading = function(){
+			var ht = '<div class="col-12"><div class="card mediaview-card mb-3"><div class="card-body d-flex align-items-center"><div class="icon-loading">Loading......</div></div></div></div>';
+			$('#datrows-container').empty();
+			$('#datrows-container').append(ht);
+		};
+		
+		doRefresh(true);
+		
+		$('#btn-search').click(function(event){
+			curPage = 1;
+			addLoading();
+			doRefresh(true);
+		});
+		$('#btn-loadmore').click(function(){
+			curPage ++;
+			doRefresh();
+		});
+	});
+	
+	function doSubmitReceiver(pkid) {
+		if (loading == 1) {
+			toastr.info('等待服务器反馈，请稍候。');
+			return;
+		}
+		if (!HyUtils.isNumber(pkid)) {
+			toastr.warning('参数有误');
+			return;
+		}
+		var data = $('#form' + pkid).serializeObject();
+		toastr.info('正在处理，请稍候...');
+		loading = 1;
+		HyUtils.post("/wxoa/ostkupdrecv.do", data, function (datobj) {
+			loading = 0;
+			toastr.success('操作成功');
+			preloadRecvList(data['jobclientid_in']);
+		});
+	}
+	
+	function showDtlView (pkid) {
+		if (!HyUtils.isNumber(pkid)) {
+			toastr.warning('程序异常：无效参数值');
+			return;
+		}
+		var data = {"pkid": pkid};
+		$('#mst-container').html('<div class="icon-loading">Loading......</div>');
+		$('#gds-container').html('<div class="icon-loading">Loading......</div>');
+		$('#dtlModal').modal('show');
+		HyUtils.post("/wxoa/stkcntldviewdat.do", data, function (datobj) {
+			$('#mst-container').empty();
+			$('#gds-container').empty();
+			var dat = datobj;
+			if (dat) {
+				var tpl = $('script[type="text/template"][id="mst"]').html();
+				var arr = [];
+
+				var ypos = dat.stk_receiver_status.indexOf('Y');
+				var npos = dat.stk_receiver_status.indexOf('N');
+				dat.stkrecsta = (npos == -1 && ypos > -1) ? 'Y' : ((npos > -1 && ypos > -1) ? 'P' : 'N');
+				dat.stkrecstadesc = (dat.stkrecsta == 'Y') ? '已提交完成' : ((dat.stkrecsta == 'P') ? '部分提交' : '未提交');
+				
+				arr.push(HyUtils.formatTemplate(dat, tpl));
+				$('#mst-container').append(arr.join(''));
+				var gd = dat.dtlgrid;
+				if (gd && gd.rows && gd.rows.length > 0) {
+					arr = [];
+					tpl = $('script[type="text/template"][id="gds"]').html();
+					$.each(gd.rows, function(i, o) {
+						o.allowoptdsp = (o.issales_in == 'Y' && o.isfmstout == 'Y') ? '' : 'display:none;';
+						o.pointcolor = (HyUtils.isEmpty(o.receiver) || o.receiver.length < 2) ? 'red' : 'green';
+						if (HyUtils.isEmpty(o.refno_in)) {
+							o.refno_in = '';
+						} else {
+							o.refno_in = '-' + o.refno_in;
+						}
+						arr.push(HyUtils.formatTemplate(o, tpl));
+					});
+					$('#gds-container').append(arr.join(''));
+				}
+			} else {
+				toastr.info('没有数据');
+				$('#dtlModal').modal('hide');
+			}
+		});
+	};
+	
+	function showRecvList(pkid, clientid) {
+		if (loading == 1) {
+			toastr.info('等待服务器反馈，请稍候。');
+			return;
+		}
+		if (curRecvers && curRecvers.length > 0) {
+			renderRecvList();
+			return;
+		}
+		curRecvPk = pkid;
+		loading = 1;
+		HyUtils.post("/wxoa/ostkrevclst.do", {"clientid": clientid}, function (datobj) {
+			loading = 0;
+			if (!HyUtils.isEmpty(datobj)) {
+				curRecvers = datobj.rows;
+			}
+			renderRecvList();
+		});
+	}
+	function preloadRecvList(clientid) {
+		HyUtils.post("/wxoa/ostkrevclst.do", {"clientid": clientid}, function (datobj) {
+			if (!HyUtils.isEmpty(datobj)) {
+				curRecvers = datobj.rows;
+			}
+		});
+	}
+	function renderRecvList() {
+		var rows = curRecvers;
+		var rhtm = "";
+		$('#reclist').children('div').children('ul').empty();
+		for (var i = 0; i < rows.length; i = i + 1) {
+			rhtm += '<li onclick="selectRecv(' + i + ')">' + rows[i].receiver + '</li>';
+		}
+		$('#reclist').children('div').children('ul').append(rhtm);
+		
+		xtip.open({
+			type: 'ready',
+			content: '#reclist',
+			title: '选择收货人',
+			app: true
+		});
+	}
+	function selectRecv(index) {
+		var rows = curRecvers;
+		if (rows && rows.length > index && index >= 0) {
+			var row = rows[index];
+			HyUtils.fillForm('form' + curRecvPk, row);
+		}
+		xtip.closeAll();
+	}
+	</script>
+	
+	<script type="text/template" id="list">
+				<div class="col-12">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="media-left media-middle media-bottom">
+								<img src="<@spring.ctx/>/ress/images/core-img/{imgname}" width="48" alt="">
+							</div>
+							<div class="media-body">
+								<div class="sub-item">
+									<em class="sub-title">{jobno}</em><div class="data-content text-right">&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.ostono"]!"出库单号"}：</em><div class="data-content text-right">{ostonos}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>ETD：</em><div class="data-content text-right">{etddesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>ETA：</em><div class="data-content text-right">{etadesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.pol"]!"装港"}：</em><div class="data-content text-right">{polcode} / {pol}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.pod"]!"目的港"}：</em><div class="data-content text-right">{podcode} / {pod}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkcntld.stkrecsta"]!"收货人信息状态"}：</em><div class="data-content text-right">{stkrecstadesc}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em></em><div class="data-content text-right"><a class="btn btn-success btn-sm" href="javascript:void(0)" onclick="showDtlView('{shpid}')"><i class="mr-1 icofont-page"></i>${LSA["stkcntld.desc"]!"详情"}</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	</script>
+	
+	<script type="text/template" id="mst">
+    			<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["stkcntld.jobno"]!"工作号"}：</span></div>
+ 					<div class="data-content">{jobno}&nbsp;</div>
+ 				</div>
+ 				<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["stkcntld.vevo"]!"船名航次"}：</span></div>
+ 					<div class="data-content">{vessel} / {voyage}&nbsp;</div>
+ 				</div>
+ 				<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>ETD：</span></div>
+ 					<div class="data-content">{etd}&nbsp;</div>
+ 				</div>
+ 				<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>ETA：</span></div>
+ 					<div class="data-content">{eta}&nbsp;</div>
+ 				</div>
+ 				<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["stkcntld.pol"]!"装港"}：</span></div>
+ 					<div class="data-content">{polcode} / {pol}&nbsp;</div>
+ 				</div>
+ 				<div class="single-profile-data d-flex align-items-center justify-content-between">
+ 					<div class="title"><span>${LSA["stkcntld.pod"]!"目的港"}：</span></div>
+ 					<div class="data-content">{podcode} / {pod}&nbsp;</div>
+ 				</div>
+	</script>
+	
+	<script type="text/template" id="gds">
+    					<div class="card">
+							<div class="card-header form-inline">
+								<a class="card-link" data-toggle="collapse" href="#collapse{sodtlid}">
+									<div class="hd-title"><div class="status-point {pointcolor}"></div>&nbsp;{LSA["stkcntld.ostono"]!"出库单号"}：{stono_out}&nbsp;&nbsp;&nbsp;&nbsp;{remarks_out}<br/>&nbsp;&nbsp;${LSA["stkcntld.istocode"]!"入仓号"}&nbsp;&nbsp;&nbsp;&nbsp;：{salescode_in}-{podcode_in}-{jobcliextcode_in}-{refno_in}<br/>&nbsp;&nbsp;${LSA["stkcntld.istono"]!"入库单号"}：{stono_in}</div>
+								</a>
+								<button class="hd-btn btn btn-default" onclick="doSubmitReceiver('{sodtlid}')" style="{allowoptdsp}"><i class="icofont-save">&nbsp;</i></button>
+							</div>
+							<div id="collapse{sodtlid}" class="collapse" data-parent="#gds-container">
+								<div class="card-body">
+									<form action="#" onsubmit="return false;" id="form{sodtlid}">
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.gdsname"]!"货物名称"}：</label>
+											<span>{goodsname_c}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.gdsnameen"]!"货物英文"}：</label>
+											<span>{goodsname}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.gdstype"]!"货类"}：</label>
+											<span>{gdstype_in}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.pieces"]!"件数"}：</label>
+											<span>{pieces}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.grswgt"]!"毛重"}：</label>
+											<span>{grswgt}</span>
+										</div>
+										<div class="form-group form-inline">
+											<label>${LSA["stkcntld.gdscbm"]!"体积"}：</label>
+											<span>{gdscbm}</span>
+										</div>
+										<div class="form-group">
+											<label for="receiver-{sodtlid}">${LSA["stkcntld.receiver"]!"收货人"}</label>
+											<div class="input-group mb-3 input-group-sm">
+												<input type="hidden" name="sodtlid" value="{sodtlid}"/>
+												<input type="hidden" name="jobclientid_in" value="{jobclientid_in}"/>
+												<input type="text" name="receiver" id="receiver-{sodtlid}" class="form-control" value="{receiver}"/>
+												<div class="input-group-append"><span class="input-group-btn" onclick="showRecvList('{sodtlid}', '{jobclientid_in}')"><i class="icofont-list">&nbsp;</i></span></div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="rectelno-{sodtlid}">${LSA["stkcntld.rectelno"]!"收货电话"}</label>
+											<input type="text" name="rectelno" id="rectelno-{sodtlid}" class="form-control" value="{rectelno}"/>
+										</div>
+										<div class="form-group">
+											<label for="recaddr-{sodtlid}">${LSA["stkcntld.recaddr"]!"收货地址"}</label>
+											<input type="text" name="recaddr" id="recaddr-{sodtlid}" class="form-control" value="{recaddr}"/>
+										</div>
+										<div class="form-group">
+											<label for="reccity-{sodtlid}">${LSA["stkcntld.reccity"]!"收货城市"}</label>
+											<input type="text" name="reccity" id="reccity-{sodtlid}" class="form-control" value="{reccity}"/>
+										</div>
+										<div class="form-group">
+											<label for="recpostcode-{sodtlid}">${LSA["stkcntld.recpostcode"]!"收货邮编"}</label>
+											<input type="text" name="recpostcode" id="recpostcode-{sodtlid}" class="form-control" value="{recpostcode}"/>
+										</div>
+										<div class="form-group">
+											<label for="recdtbnotice-{sodtlid}">${LSA["stkcntld.recdtbnotice"]!"派送注意事项"}</label>
+											<textarea name="recdtbnotice" id="recdtbnotice-{sodtlid}" class="form-control">{recdtbnotice}</textarea>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+	</script>
+</body>
+</html>

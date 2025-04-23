@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8"/>
+	<title><#if SITEINFO??>${SITEINFO.site_title}<#else>华逸风行微信应用</#if></title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="author" content="huayee.tech, huayeetech.com" />
+	<link rel="icon" href="<@spring.ctx/>/ress/images/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/views/wxoa/style.css?22"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/toastr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/css/xtiper/xtiper.css"/>
+	<style type="text/css">
+		body{font-size:62.5%;font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto;}
+		.viewport{ max-width:640px; min-width:300px; margin:0 auto;}
+		#tb1 {
+			min-width: 1060px;
+		}
+		#table-wrapper {
+			padding-left: 3px;
+			padding-right: 3px;
+		}
+		.filter-option {
+			margin-left: 8px;
+		}
+		#btn-downxls i {
+			color: #1E8449;
+		}
+	</style>
+</head>
+<body>
+	<!-- Preloader-->
+	<div class="preloader" id="preloader">
+		<div class="spinner-grow text-secondary" role="status">
+			<div class="sr-only">Loading...</div>
+		</div>
+	</div>
+	
+	<!-- Header Area-->
+    <div class="header-area" id="headerArea">
+		<div class="container h-100 d-flex align-items-center justify-content-between">
+			<!-- Back Button-->
+			<div class="back-button"><a href="<@spring.ctx/>/wxoa/index.action"><i class="icofont-rounded-left"></i>&nbsp;</a></div>
+			<!-- Page Title-->
+			<div class="page-heading">
+				<h6 class="mb-0">${LSA["stkquery.head"]!"库存查询"}</h6>
+			</div>
+			<div>
+			<div class="filter-option float-left" id="btn-downxls"><i class="icofont-download"></i></div>
+			<!-- Filter Option-->
+			<div class="filter-option float-right" id="sideNavbarToggler"><i class="icofont-search"></i></div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Sidenav Black Overlay-->
+	<div class="sidenav-black-overlay"></div>
+	<!-- Side Nav Wrapper-->
+	<div class="suha-sidenav-wrapper filter-nav" id="sidenavWrapper">
+		<!-- Catagory Sidebar Area-->
+		<div class="catagory-sidebar-area">
+			<!-- Catagory-->
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkquery.istono"]!"入库单号"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_istono"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkquery.clicode"]!"客户代码"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_clicode"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-1">
+				<h6 class="widget-title mb-0">${LSA["stkquery.sales"]!"业务员"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_sales"/>
+					</div>
+				</div>
+			</div>
+			<div class="widget catagory mb-3">
+				<h6 class="widget-title mb-0">${LSA["stkquery.depot"]!"仓库"}</h6>
+				<div class="widget-desc">
+					<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+						<input type="text" id="srh_depot"/>
+					</div>
+				</div>
+			</div>
+			<!-- Apply Filter-->
+			<div class="apply-filter-btn"><a class="btn btn-success" href="javascript:void(0)" id="btn-search">${LSA["stkquery.searchbtn"]!"搜索"}</a></div>
+		</div>
+	</div>
+
+    <div class="page-content-wrapper">
+    	<div class="container-fluid">
+			<div class="row" id="table-wrapper">
+				<div class="table-responsive-sm">
+					<table id="tb1" class="table table-bordered table-striped table-light table-sm" data-striped="true">
+						<thead>
+							<#if bydtl?? && bydtl == "Y">
+							<tr>
+								<th>${LSA["stkquery.actdate"]!"入仓时间"}</th>
+								<th>${LSA["stkquery.istono"]!"入库单号"}</th>
+								<th>${LSA["stkquery.gdsname"]!"货物名称"}</th>
+								<th>${LSA["stkquery.gdssize"]!"规格型号"}</th>
+								<th>${LSA["stkquery.prodate"]!"生产日期"}</th>
+								<th class="text-right">${LSA["stkquery.num"]!"数量"}</th>
+								<th>${LSA["stkquery.unit"]!"单位"}</th>
+								<th class="text-right">${LSA["stkquery.grswgt"]!"毛重"}<span style="font-size: 0.45rem">(KGS)</span></th>
+								<th class="text-right">${LSA["stkquery.gdscbm"]!"体积"}<span style="font-size: 0.45rem">(CBM)</span></th>
+								<th>${LSA["stkquery.depot"]!"仓库"}</th>
+								<th class="text-center">${LSA["stkquery.stkstatus"]!"库存状态"}</th>
+								<th class="text-center">${LSA["stkquery.opr"]!"操作"}</th>
+							</tr>
+							<#else>
+							<tr>
+								<th>${LSA["stkquery.icustomno"]!"入仓号"}</th>
+								<th>${LSA["stkquery.actdate"]!"入仓时间"}</th>
+								<th class="text-center">${LSA["stkquery.opr"]!"操作"}</th>
+								<th class="text-center">${LSA["stkquery.stkstatus"]!"库存状态"}</th>
+								<th class="text-right">${LSA["stkquery.stkpieces"]!"库存件数"}</th>
+								<th>${LSA["stkquery.istono"]!"入库单号"}</th>
+								<th>${LSA["stkquery.gdsname"]!"货物名称"}</th>
+								<th>${LSA["stkquery.gdstype"]!"货类"}</th>
+								<th class="text-right">${LSA["stkquery.gdscbm"]!"体积"}<span style="font-size: 0.45rem">(CBM)</span></th>
+								<th class="text-right">${LSA["stkquery.grswgt"]!"毛重"}<span style="font-size: 0.45rem">(KGS)</span></th>
+								<th>${LSA["stkquery.depot"]!"仓库"}</th>
+							</tr>
+							</#if>
+						</thead>
+						<tbody id="datrows-container">
+							<tr style="display: none;">
+								<td>{icustomno}&nbsp;</td>
+								<td>{actdatedesc}&nbsp;</td>
+								<td class="text-center opr-cell" id="sca-{stoid}">{staoprhtm}</td>
+								<td class="text-center">{stkstatus}&nbsp;</td>
+								<td class="text-right">{pieces_stk}&nbsp;</td>
+								<td>{stono}&nbsp;</td>
+								<td>{goodsname_stk}&nbsp;</td>
+								<td>{gdstype_stk}&nbsp;</td>
+								<td class="text-right">{gdscbm_stk}&nbsp;</td>
+								<td class="text-right">{grswgt_stk}&nbsp;</td>
+								<td>{depotname}&nbsp;</td>
+							</tr>
+							<tr><td colspan="11"><div class="icon-loading">Loading......</div></td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-12" style="display: none;">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="icon-loading">Loading......</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row" style="margin-top: 12px;">
+				<div class="col-12 text-center"><button type="button" class="btn btn-info" id="btn-loadmore">${LSA["stkquery.loadbtn"]!"加载更多"}...</button></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="oprModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">${LSA["stkquery.oprtitle"]!"装柜状态确认"}</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<div class="radio">
+						<label>
+							<input type="radio" name="scanopt" id="scanopt1" value="Y">${LSA["stkquery.scanopty"]!"可以装柜"} 
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" name="scanopt" id="scanopt2" value="C">${LSA["stkquery.scanoptc"]!"暂不装柜"} 
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" name="scanopt" id="scanopt3" value="N">${LSA["stkquery.scanoptn"]!"未确认"} 
+						</label>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="button" onclick="doConfirmStatus()" class="btn btn-primary">${LSA["stkquery.primbtn"]!"提交"} </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="extModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">${LSA["stkquery.exttitle"]!"导出"}</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<h6 class="small mb-3">${LSA["stkquery.mb3"]!"请将以下网址粘贴到浏览器地址栏下载文件"}</h6>
+					<div><input type="text" id="ext-url" style="width: 100%" class="form-control" readonly="readonly"/></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Footer Nav-->
+	<#include "/wxoa/widget/footer.ftl">
+	
+	<#include "/xtpl/wxoa-all-js.ftl">
+	
+	<script type="text/javascript">
+	var curpkid = 0;
+	$(function(){
+		var curPage = 1,
+		    curLimit = 20;
+		var doRefresh = function(isClear) {
+			var data = {
+					"istono": $("#srh_istono").val(),
+					"depot": $("#srh_depot").val(),
+					"clicode": $("#srh_clicode").val(),
+					"sales": $("#srh_sales").val(),
+					"page": curPage,
+					"limit": curLimit
+				};
+			HyUtils.post("/wxoa/stkqrydat.do", data, function (datobj) {
+				if (isClear === true) clearList();
+				var gd = datobj;
+				if (gd && gd.rows && gd.rows.length > 0) {
+					var tpl = $('script[type="text/template"][id="h-list"]').html();
+					var arr = [];
+					$.each(gd.rows, function(i, o) {
+						o.btnbg = HyUtils.isEmpty(o.scanstatus) ? 'btn-primary' : (('Y' == o.scanstatus) ? 'btn-success' : (('C' == o.scanstatus) ? 'btn-primary' : 'btn-warning'));
+						o.staoprhtm = (o.user_issales == 'Y') ? '<a class=" ' + o.btnbg + ' btn-sm" href="javascript:void(0);" onclick="showConfirmStatus(\'' + o.stoid + '\', \'' + o.scanstatus + '\')"><i class="mr-1 icofont-edit"></i>' + o.scanstatusdesc + '</a>' : o.scanstatusdesc;
+						o.depot = (o.orgid == 1009) ? o.depotcode : o.depotname;
+						arr.push(HyUtils.formatTemplate(o, tpl));
+					});
+					$('#datrows-container').append(arr.join(''));
+				} else {
+					toastr.info('没有更多数据了^_^');
+				}
+			});
+		};
+		var clearList = function(){
+			$('#datrows-container').empty();
+		};
+		var addLoading = function(){
+			var ht = '<div class="col-12"><div class="card mediaview-card mb-3"><div class="card-body d-flex align-items-center"><div class="icon-loading">Loading......</div></div></div></div>';
+			ht = '<tr><td colspan="9"><div class="icon-loading">Loading......</div></td></tr>'
+			$('#datrows-container').empty();
+			$('#datrows-container').append(ht);
+		};
+		
+		doRefresh(true);
+		
+		$('#btn-search').click(function(event){
+			curPage = 1;
+			addLoading();
+			doRefresh(true);
+		});
+		$('#btn-loadmore').click(function(){
+			curPage ++;
+			doRefresh();
+		});
+		$('#btn-downxls').click(function(event){
+			var data = {
+				"page": 0,
+				"limit": 0
+			};
+			
+			HyUtils.post("/wxoa/stkqrydatxls.do", data, function (datobj) {
+				$('#ext-url').val(datobj);
+				$('#extModal').modal('show');
+			});
+			
+		});
+	});
+	function showConfirmStatus(pkid, sta) {
+		curpkid = pkid;
+		curstatus = sta||''; 
+		if (!HyUtils.isNumber(curpkid)) return;
+		$('#oprModal').modal('show');
+		if ('Y' == curstatus) {
+			$('input:radio[name=scanopt]')[0].checked = true;
+		} else if ('C' == curstatus) {
+			$('input:radio[name=scanopt]')[1].checked = true;
+		} else if ('N' == curstatus) {
+			$('input:radio[name=scanopt]')[2].checked = true;
+		}
+	}
+	function doConfirmStatus(sta) {
+		if (HyUtils.isEmpty(sta)) {
+			sta = $('input:radio[name=scanopt]:checked').val();
+		}
+		if (curstatus == sta) {
+			toastr.warning('没有修改');
+			$('#oprModal').modal('hide');
+			return;
+		}
+		if (!HyUtils.isNumber(curpkid)) {
+			toastr.info('未选择一票单，请刷新重试');
+			return;
+		}
+		var data = {
+			"stoid": curpkid,
+			"status": sta
+		};
+		var stadesc = ('Y' == sta) ? '可以装柜' : (('C' == sta) ? '暂不装柜' : '未确认');
+		var btnbg = ('Y' == sta) ? 'btn-success' : (('C' == sta) ? 'btn-primary' : 'btn-warning');
+		
+		$('#oprModal').modal('hide');
+		toastr.info('正在处理，请稍候...');
+		HyUtils.post("/wxoa/istkupdldsta.do", data, function (datobj) {
+			$('#sca-'+curpkid).html('<a class="btn ' + btnbg + ' btn-sm" href="javascript:void(0);" onclick="showConfirmStatus(\'' + curpkid + '\', \'' + sta + '\')"><i class="mr-1 icofont-edit"></i>' + stadesc + '</a>');
+		});
+		
+	}
+	</script>
+	<script type="text/template" id="h-list">
+							<#if bydtl?? && bydtl == "Y">
+							<tr>
+								<td>{actdatedesc}</td>
+								<td>{stono}&nbsp;</td>
+								<td>{goodsname_stk}&nbsp;</td>
+								<td>{gdssize}</td>
+								<td>{gdsprodate}</td>
+								<td class="text-right">{pieces_stk}&nbsp;</td>
+								<td>{packing}</td>
+								<td class="text-right">{grswgt_stk}&nbsp;</td>
+								<td class="text-right">{gdscbm_stk}&nbsp;</td>
+								<td>{depot}&nbsp;</td>
+								<td class="text-center">{stkstatus}&nbsp;</td>
+								<td class="text-center opr-cell" id="sca-{stoid}">{staoprhtm}</td>
+							</tr>
+							<#else>
+							<tr>
+								<td>{icustomno}&nbsp;</td>
+								<td>{actdatedesc}&nbsp;</td>
+								<td class="text-center opr-cell" id="sca-{stoid}">{staoprhtm}</td>
+								<td class="text-center">{stkstatus}&nbsp;</td>
+								<td class="text-right">{pieces_stk}&nbsp;</td>
+								<td>{stono}&nbsp;</td>
+								<td>{goodsname_stk}&nbsp;</td>
+								<td>{gdstype_stk}&nbsp;</td>
+								<td class="text-right">{gdscbm_stk}&nbsp;</td>
+								<td class="text-right">{grswgt_stk}&nbsp;</td>
+								<td>{depot}&nbsp;</td>
+							</tr>
+							</#if>
+	</script>
+	<script type="text/template" id="v-list">
+				<div class="col-12">
+					<div class="card mb-3 media-vcard">
+						<div class="card-body d-flex align-items-center media">
+							<div class="media-left media-middle media-bottom">
+								<img src="<@spring.ctx/>/ress/images/core-img/{imgname}" width="48" alt="确认状态">
+							</div>
+							<div class="media-body">
+								<div class="sub-item">
+									<em class="sub-title">{stono}&nbsp;</em><div class="data-content text-right">&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkquery.icustomno"]!"入仓号"}：</em><div class="data-content text-right">{icustomno}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkquery.gdsname"]!"货物名称"}：</em><div class="data-content text-right">{goodsname_stk}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkquery.gdstype"]!"货类"}：</em><div class="data-content text-right">{gdstype_stk}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkquery.stkpieces"]!"库存件数"}：</em><div class="data-content text-right">{pieces_stk}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkquery.stkgrswgt"]!"库存毛重"}：</em><div class="data-content text-right">{grswgt_stk}&nbsp;KGS</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkquery.stkgdscbm"]!"库存体积"}：</em><div class="data-content text-right">{gdscbm_stk}&nbsp;CBM</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkquery.depot"]!"仓库"}：</em><div class="data-content text-right">{depot}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkquery.clientabbr"]!"委托人"}：</em><div class="data-content text-right">{clientabbr_job}&nbsp;</div>
+								</div>
+								<div class="sub-item">
+									<em>${LSA["stkquery.remarks"]!"备注"}：</em><div class="data-content text-right">{remarks}&nbsp;</div>
+								</div>
+								<div class="sub-item" style="display: none;">
+									<em></em><div class="data-content text-right"><a class="btn btn-success btn-sm" href="#"><i class="mr-1 icofont-page"></i>${LSA["stkquery.desc"]!"详情"}</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	</script>
+</body>
+</html>

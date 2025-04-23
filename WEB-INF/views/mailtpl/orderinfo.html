@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+	<title>订单通知</title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<meta name="description" content=""/>
+	<meta name="keywords" content=""/>
+	<meta name="author" content=""/>
+	<meta name="copyright" content=""/>
+	<meta name="robots" content="all"/>
+	<meta name="visit-after" content="7 days"/>
+	<style type="text/css">
+	    .mail-box{
+	       width: 85%;
+	       margin: 0 auto;
+	      /*  border: 1px solid #000; */
+	       padding: 10px;
+	       background-color:#F8F8F8;
+	    }
+		.notice-dev{
+		   width:95%;
+		   margin:0 auto;
+		   margin-top:20px;
+		   /* border: 1px solid #000; */
+		   text-align:center;
+		}
+		.mail-container{
+		   width:95%;
+		   display:flex;
+		   flex-direction:column;
+		   align-items: center;
+		   margin-top: 15px;
+		   /* border: 1px solid #000;  */
+		}
+		.mail-text{
+		   margin:20px 0;  
+		   font-weight:bold;
+		   width:95%;
+		}
+		.order-info{
+		   width:95%;
+		   margin-top:20px;
+		   margin-bottom:20px;
+		  /*  border: 1px solid #000;  */
+		   display:flex;
+		   flex-direction:column;
+		   align-items: center;
+		   border-radius:5px;
+		   background-color:#fff;
+		   color:#000;
+		}
+		.row{
+		  margin:10px 0;
+		  width:95%;
+		  /* border: 1px solid #000; */
+		  display:flex;
+		  justify-content: flex-start;
+		}
+		label{
+		  width:100px;
+		 /*  border: 1px solid #000; */
+		  display:flex;
+		  justify-content: flex-start;
+		  align-items: center;
+		}
+		span{
+		    display: inline-block;
+            width: 80%;
+            word-break: break-all;
+            white-space: normal;
+		}
+		.text{
+		   margin:5px;
+		}
+		#nav{
+		  /* border:1px solid #000; */ 
+		  height:40px;
+		  display:flex;
+		  justify-content: flex-start;
+		  line-height:40px;
+		  font-size:18px;
+		  background-color:#F0F0F0;
+		}
+		#nav-text{
+		  margin-left:15px;
+		}
+		.line{
+		  width:3px;
+		  border:1px solid #018BF8;
+		  background-color:#018BF8;
+		}
+		.footer{
+		   width: 85%;
+	       margin: 0 auto;
+	       margin-top: 45px;
+	      /*  border: 1px solid #000; */
+	       padding: 10px;
+	       
+		}
+		#footer-text{
+		  font-size:18px;
+		  font-weight:bold;
+		}
+	</style>
+</head>
+<body>
+	<div class="mail-box">
+	 <h2 class="notice-dev">订单通知</h2>
+	   <div class="mail-container">
+	       <#if m_confirmed = "Y" >
+	          <div class="mail-text">会员用户 ${m_confirmbyname!''} 于 ${m_confirmdt!''} 在网上提交了一笔新的订单，请您及时处理。</div>
+           <#else>
+	          <div class="mail-text">会员用户 ${m_confirmbyname!''} 于 ${m_confirmdt!''} 在网上撤销了一笔订单的提交，请您及时处理。</div>
+           </#if>	       
+           <div class="order-info">
+	           <div class="row">
+	              <label>委托人:</label>
+				  <span class="text">${m_clititle!''}</span>
+	           </div>
+	           <div class="row">
+	              <label>下单日期:</label>
+				  <span class="text">${createtime!''}</span>
+	           </div>
+	           <div class="row">
+	              <label>订单号:</label>
+				  <span class="text">${m_ordno!''}</span>
+	           </div>
+	           <div class="row">
+	              <label>预编号:</label>
+				  <span class="text">${m_ordnox!''}</span>
+	           </div>
+	           <div class="row">
+	            <label>订单状态:</label>
+	              <#if m_confirmed = "Y">
+	                 <span class="text">已提交</span>
+                  <#else>
+	                 <span class="text">已撤销</span>
+                  </#if>
+	           </div>
+	           <div class="row">
+	              <label>起运港:</label>
+				  <span class="text">${pol!''}</span>
+	           </div>
+	           <div class="row">
+	              <label>目的港:</label>
+				  <span class="text">${placedel!''}</span>
+	           </div>
+	           <div class="row">
+	              <label>备注:</label>
+				  <span class="text" id="remark">${remarks!''}</span>
+	           </div>
+	       </div>
+	       <div class="mail-text" id="nav" >
+	          <div class="line"></div> 
+	          <span id="nav-text" >祝您愉快! </span>            
+	       </div>
+	   </div>
+	</div>
+	<div class="footer">
+	   <span id="footer-text">该信息由系统自动生成，请勿回复！</span>
+	</div>
+</body>
+</html>

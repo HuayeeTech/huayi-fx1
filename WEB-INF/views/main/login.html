@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+	<title><#if pgseo??>${pgseo.title!'华逸风行'}<#else>华逸风行</#if></title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<meta name="description" content=""/>
+	<meta name="keywords" content=""/>
+	<meta name="author" content=""/>
+	<meta name="copyright" content=""/>
+	<meta name="robots" content="all"/>
+	<meta name="visit-after" content="7 days"/>
+	<link href="${rc.contextPath}/ress/images/favicon.ico?v=202103.1" rel="shortcut icon" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="<@spring.ctx/>/ress/extjs/ress/css/ext-all.css?v=202102.1"/>
+	<link rel="stylesheet" href="<@spring.ctx/>/ress/css/default/style.css"/>
+	<style type="text/css">
+		.msgtip {
+			text-align: center;
+			margin: 20px auto;
+		}
+		.bm-nav {
+			margin: 24px auto;
+			width: 100%;
+			text-align: center;
+		}
+		.bm-nav a, .bm-nav a:link, .bm-nav a:visited {
+			color: #1565C0;
+			font-size: 10.5pt;
+			text-decoration: none;
+		}
+		.bm-nav a:hover {
+			color: #FF5722;
+			text-decoration: underline;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<#if mpk??>
+		<h6 class="msgtip">${mpk.msg}</h6>
+		</#if>
+	</div>
+	<div class="bm-nav">
+		<ul>
+			<li><a href="./" target="_self"><@spring.message "ls9459"/></a></li>
+		</ul>
+	</div>
+</body>
+</html>
