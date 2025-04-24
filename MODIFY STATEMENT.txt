@@ -1,0 +1,22 @@
+[HuayeeTech/huayi-fx1] 修改声明
+
+1. 本软件基于 [probonogeek/extjs]（版本：[3.4.1.1]，GPL 3.0协议）开发。
+   原始项目源码获取地址：[https://github.com/probonogeek/extjs/tree/3.x?tab=License-1-ov-file]
+
+2. 修改内容：
+   - 未直接修改源码，采用 Ext.override 方式重写了一些组件逻辑以满足应用程序功能需要（WebContent/ress/js/usr/ext-override.js）；
+   - 重写了 Ext.form.TextField ，增加必填项标签显示星号，增加只读文本框样式类（textfield-readonly）；
+   - 重写了 Ext.form.ComboBox ，增加只读文本框样式类（textfield-readonly）；
+   - 重写了Ext.form.RadioGroup ，增加必填项标签显示星号；
+   - 重写了 Ext.form.TextField ，修改中文字符长度计算方式；
+   - 重写了 Ext.grid.GridView ，处理谷歌浏览器列表宽度问题；
+   - 重写了Ext.grid.CheckboxSelectionModel ，增加表头选择框实现一键多选功能；
+   - 重写了Ext.form.DateField ，修改日期格式，满足客户个性化需求；
+   - 其他调整：[重写日历相关标签属性，以支持中文显示；另外通过继承方式组合封装了一些组件]。
+
+3. 版权声明：
+   - 原始代码版权归 [原作者/组织] 所有；
+   - 修改部分仅供参考。
+
+4. 本软件遵循GPL 3.0协议开源。
+   完整源代码获取地址：[https://github.com/HuayeeTech/huayi-fx1]。
